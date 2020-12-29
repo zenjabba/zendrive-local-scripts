@@ -25,6 +25,7 @@ ExecStart=/usr/bin/rclone mount \
   --timeout=15s \
   --umask=002 \
   zenstorage: /mnt/sharedrives/zd-storage
+TimeoutStartSec=900
 ExecStop=/bin/fusermount -uz /mnt/sharedrives/zd-storage
 Restart=on-abort
 RestartSec=5
