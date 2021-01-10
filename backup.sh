@@ -16,6 +16,10 @@ sudo /bin/cp /etc/systemd/system/zd-storage.service /opt/setup_files/
 sudo /bin/cp /etc/systemd/system/mergerfs.service /opt/setup_files/
 /bin/cp ~/.config/rclone/rclone.conf /opt/setup_files/
 #
+# stop poller
+#
+sudo systemctl stop poller.service
+#
 # Down running dockers
 #
 cd /opt/docker/
@@ -29,6 +33,10 @@ sudo btrfs subvolume snapshot / /opt/snapshot
 #  Bring Docker back up
 #
 /usr/bin/docker-compose up -d
+#
+# start poller
+#
+sudo systemctl start poller.service
 #
 # create tar files of each folder under /opt
 #
