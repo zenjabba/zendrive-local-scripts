@@ -12,6 +12,7 @@ mkdir -p /opt/setup_files/
 #
 # copy systemd files & rclone.conf under /opt
 #
+sudo /bin/cp /etc/systemd/system/zd-storage-small.service /opt/setup_files/
 sudo /bin/cp /etc/systemd/system/zd-storage.service /opt/setup_files/
 sudo /bin/cp /etc/systemd/system/mergerfs.service /opt/setup_files/
 /bin/cp ~/.config/rclone/rclone.conf /opt/setup_files/
