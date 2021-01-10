@@ -34,6 +34,7 @@ sudo btrfs subvolume snapshot / /opt/snapshot
 #
 cd /opt/snapshot/opt/
 /usr/bin/find . -maxdepth 1 -mindepth 1 -type d -exec tar cvf /mnt/local/backup/{}.tar {}  \;
+wait
 #
 # delete snapshot
 #
@@ -41,4 +42,5 @@ sudo btrfs subvolume delete /opt/snapshot
 #
 # upload to GDrive
 # 
-rclone move /mnt/local/backups/ GOOGLE:/backups/ --transfers=50 -vvP
+rclone move /mnt/local/backup/ GOOGLE:/backups/ --transfers=50 -vvP
+wait
