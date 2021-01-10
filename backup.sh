@@ -42,5 +42,5 @@ sudo btrfs subvolume delete /opt/snapshot
 #
 # upload to GDrive
 # 
-rclone move /mnt/local/backup/ GOOGLE:/backups/ --transfers=50 -vvP
+rclone move /mnt/local/backup/ GOOGLE:/backups/$(date +"%Y-%m-%d")/ --transfers=50 -vvP
 wait
