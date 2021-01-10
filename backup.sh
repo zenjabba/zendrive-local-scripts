@@ -41,3 +41,4 @@ sudo btrfs subvolume delete /opt/snapshot
 #
 # upload to GDrive
 # 
+rclone move /mnt/local/backups/ GOOGLE:/backups/ --transfers=50 -vvP
