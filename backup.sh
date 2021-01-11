@@ -26,6 +26,8 @@ FILE=/etc/security/limits.conf
 if [ -f "$FILE" ]; then sudo /bin/cp /etc/security/limits.conf /opt/setup_files/; fi
 FILE=/etc/sysctl.conf
 if [ -f "$FILE" ]; then sudo /bin/cp /etc/sysctl.conf /opt/setup_files/; fi
+FILE=/etc/systemd/system/zd-storage-metadata.service
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage-metadata.service /opt/setup_files/; fi
 FILE=/etc/systemd/system/zd-storage-small.service
 if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage-small.service /opt/setup_files/; fi
 FILE=/etc/systemd/system/zd-storage.service
