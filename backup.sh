@@ -1,10 +1,16 @@
 #!/bin/bash
 # assumes your user as write access to /mnt/local
-# and your docker compose sits in /opt/docker
 # $1 = folder where your docker-compose.yml is stored
 # $2 = name of source snapshot folder
 # $3 = name of destination snapshot folder
-# 
+# $4 = if your BTFS is at / and not /opt then set this to 1, otherwise leave empty
+#
+# sample if you use BTRFS for /opt - 
+# ./backup.sh /opt/docker/ /opt /opt/snapshot
+#
+# sample if you use BTRFS for / -
+# ./backup.sh /opt/docker/ / /opt/snapshot 1
+#
 #   Make sure folders exist
 #
 mkdir -p /mnt/local/backup/
@@ -42,6 +48,9 @@ sudo systemctl start poller.service
 # create tar files of each folder under /opt
 #
 cd $3
+if [ "$4" -eq "1" ]; then
+        cd $3/opt
+fi
 /usr/bin/find . -maxdepth 1 -mindepth 1 -type d -exec tar cvf /mnt/local/backup/{}.tar {}  \;
 wait
 #
@@ -51,5 +60,5 @@ sudo btrfs subvolume delete $3
 #
 # upload to GDrive
 # 
-rclone move /mnt/local/backup/ GOOGLE:/backups/$(date +"%Y-%m-%d")/ --transfers=50 -vvP
+rclone move /mnt/local/backup/ GOOGLE:/Backups/$(date +"%Y-%m-%d")/ --transfers=50 -vvP
 wait
