@@ -61,11 +61,7 @@ sudo systemctl start poller.service
 #
 # create tar files of each folder under /opt
 #
-if [ "$6" -eq "1" ]; then
-        cd $3/opt
-else
-        cd $3
-fi
+if [ -z ${6+x} ]; then cd $3 else cd $3/opt; fi
 /usr/bin/find . -maxdepth 1 -mindepth 1 -type d -exec tar cvf /mnt/local/backup/{}.tar {}  \;
 wait
 #
