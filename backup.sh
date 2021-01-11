@@ -20,11 +20,11 @@ mkdir -p /opt/setup_files/
 # copy systemd files & rclone.conf under /opt
 #
 FILE=/etc/systemd/system/zd-storage-small.service
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage-small.service /opt/setup_files/ fi
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage-small.service /opt/setup_files/; fi
 FILE=/etc/systemd/system/zd-storage.service
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage.service /opt/setup_files/ fi
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage.service /opt/setup_files/; fi
 FILE=/etc/systemd/system/mergerfs.service
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/mergerfs.service /opt/setup_files/ fi
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/mergerfs.service /opt/setup_files/; fi
 /bin/cp ~/.config/rclone/rclone.conf /opt/setup_files/
 #
 # stop poller
