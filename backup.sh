@@ -19,9 +19,12 @@ mkdir -p /opt/setup_files/
 #
 # copy systemd files & rclone.conf under /opt
 #
-sudo /bin/cp /etc/systemd/system/zd-storage-small.service /opt/setup_files/
-sudo /bin/cp /etc/systemd/system/zd-storage.service /opt/setup_files/
-sudo /bin/cp /etc/systemd/system/mergerfs.service /opt/setup_files/
+FILE=/etc/systemd/system/zd-storage-small.service
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage-small.service /opt/setup_files/ fi
+FILE=/etc/systemd/system/zd-storage.service
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage.service /opt/setup_files/ fi
+FILE=/etc/systemd/system/mergerfs.service
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/mergerfs.service /opt/setup_files/ fi
 /bin/cp ~/.config/rclone/rclone.conf /opt/setup_files/
 #
 # stop poller
@@ -62,5 +65,5 @@ sudo btrfs subvolume delete $3
 #
 # upload to GDrive
 # 
-rclone move /mnt/local/backup/ $4:/Backups/$(date +"%Y-%m-%d")/ --transfers=50 -vvP
+rclone move /mnt/local/backup/ $4:/Backups/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
 wait
