@@ -20,13 +20,22 @@ mkdir -p /opt/setup_files/
 #
 # copy systemd files & rclone.conf under /opt
 #
+FILE=~/.bashrc
+if [ -f "$FILE" ]; then sudo /bin/cp ~/.bashrc /opt/setup_files/; fi
+FILE=/etc/security/limits.conf
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/security/limits.conf /opt/setup_files/; fi
+FILE=/etc/sysctl.conf
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/sysctl.conf /opt/setup_files/; fi
 FILE=/etc/systemd/system/zd-storage-small.service
 if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage-small.service /opt/setup_files/; fi
 FILE=/etc/systemd/system/zd-storage.service
 if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage.service /opt/setup_files/; fi
 FILE=/etc/systemd/system/mergerfs.service
 if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/mergerfs.service /opt/setup_files/; fi
-/bin/cp ~/.config/rclone/rclone.conf /opt/setup_files/
+FILE=~/.config/rclone/rclone.conf
+if [ -f "$FILE" ]; then /bin/cp ~/.config/rclone/rclone.conf /opt/setup_files/; fi
+FILE=~/.config/plexapi/config.yml
+if [ -f "$FILE" ]; then /bin/cp ~/.config/plexapi/config.yml /opt/setup_files/; fi
 #
 # stop poller
 #
