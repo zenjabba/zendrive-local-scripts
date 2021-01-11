@@ -16,9 +16,9 @@ ExecStart=/usr/bin/rclone mount \
   --async-read=false \
   --s3-disable-http2 \
   --s3-chunk-size=256M \
-  --log-file=/var/log/rclone-union-small.log \
+  --log-file=/var/log/rclone-union-metadata.log \
   --rc \
-  --rc-addr=localhost:5591 \
+  --rc-addr=localhost:5592 \
   --rc-no-auth \
   --buffer-size=256M \
   --no-checksum \
