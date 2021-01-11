@@ -1,0 +1,37 @@
+[Unit]
+Description=ZenStorage Mount
+After=network-online.target
+[Service]
+Type=notify
+User=root
+Group=root
+ExecStartPre=-/usr/bin/sudo /bin/mkdir -p /mnt/sharedrives/zd-storage-small
+ExecStartPre=-/usr/bin/sudo /bin/chmod -R 775 /mnt/sharedrives/zd-storage-small
+ExecStartPre=-/usr/bin/sudo /bin/chown -R root:root /mnt/sharedrives/zd-storage-small
+ExecStartPre=/bin/sleep 10
+ExecStart=/usr/bin/rclone mount \
+  --config=/root/.config/rclone/rclone.conf \
+  --allow-other \
+  --allow-non-empty \
+  --async-read=false \
+  --s3-disable-http2 \
+  --s3-chunk-size=256M \
+  --log-file=/var/log/rclone-union-small.log \
+  --rc \
+  --rc-addr=localhost:5591 \
+  --rc-no-auth \
+  --buffer-size=256M \
+  --no-checksum \
+  --dir-cache-time=6000h \
+  --attr-timeout=6000h \
+  --timeout=15s \
+  --umask=002 \
+  zenstorage-small: /mnt/sharedrives/zd-storage-small
+ExecStop=/bin/fusermount -uz /mnt/sharedrives/zd-storage-small
+Restart=on-abort
+RestartSec=5
+StartLimitInterval=4m
+StartLimitBurst=3
+TimeoutStartSec=900
+[Install]
+WantedBy=default.target
