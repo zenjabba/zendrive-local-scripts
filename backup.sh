@@ -4,13 +4,14 @@
 # $2 = name of source snapshot folder
 # $3 = name of destination snapshot folder
 # $4 = Name of the Google Remote to use for upload
-# $5 = if your BTFS is at / and not /opt then set this to 1, otherwise leave empty
+# $5 = folder path for remote backup
+# $6 = if your BTFS is at / and not /opt then set this to 1, otherwise leave empty
 # 
 # sample if you use BTRFS for /opt - 
-# ./backup.sh /opt/docker/ /opt /opt/snapshot GOOGLE
+# ./backup.sh /opt/docker/ /opt /opt/snapshot GOOGLE Backups
 #
 # sample if you use BTRFS for / -
-# ./backup.sh /opt/docker/ / /opt/snapshot GOOGLE 1
+# ./backup.sh /opt/docker/ / /opt/snapshot GOOGLE Backups 1
 #
 #   Make sure folders exist
 #
@@ -51,7 +52,7 @@ sudo systemctl start poller.service
 #
 # create tar files of each folder under /opt
 #
-if [ "$5" -eq "1" ]; then
+if [ "$6" -eq "1" ]; then
         cd $3/opt
 else
         cd $3
@@ -65,5 +66,5 @@ sudo btrfs subvolume delete $3
 #
 # upload to GDrive
 # 
-rclone move /mnt/local/backup/ $4:/Backups/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
+rclone move /mnt/local/backup/ $4:$5/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
 wait
