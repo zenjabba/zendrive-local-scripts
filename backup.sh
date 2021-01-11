@@ -32,6 +32,8 @@ FILE=/etc/systemd/system/zd-storage.service
 if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage.service /opt/setup_files/; fi
 FILE=/etc/systemd/system/mergerfs.service
 if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/mergerfs.service /opt/setup_files/; fi
+FILE=/etc/systemd/system/poller.service
+if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/poller.service /opt/setup_files/; fi
 FILE=~/.config/rclone/rclone.conf
 if [ -f "$FILE" ]; then /bin/cp ~/.config/rclone/rclone.conf /opt/setup_files/; fi
 FILE=~/.config/plexapi/config.yml
