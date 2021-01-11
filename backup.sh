@@ -1,10 +1,10 @@
 #!/bin/bash
 # assumes your user as write access to /mnt/local
-# assumes your file system is -  / btrfs
-# and you only want to backup the contents of the /opt folder
 # and your docker compose sits in /opt/docker
-#
-#
+# $1 = folder where your docker-compose.yml is stored
+# $2 = name of source snapshot folder
+# $3 = name of destination snapshot folder
+# 
 #   Make sure folders exist
 #
 mkdir -p /mnt/local/backup/
@@ -23,13 +23,13 @@ sudo systemctl stop poller.service
 #
 # Down running dockers
 #
-cd /opt/docker/
+cd $1
 /usr/bin/docker-compose down
 #
 #  Create btrfs snapshot
 #
-sudo btrfs subvolume delete /opt/snapshot
-sudo btrfs subvolume snapshot / /opt/snapshot
+sudo btrfs subvolume delete $3
+sudo btrfs subvolume snapshot $2 $3
 #
 #  Bring Docker back up
 #
@@ -41,13 +41,13 @@ sudo systemctl start poller.service
 #
 # create tar files of each folder under /opt
 #
-cd /opt/snapshot/opt/
+cd $3
 /usr/bin/find . -maxdepth 1 -mindepth 1 -type d -exec tar cvf /mnt/local/backup/{}.tar {}  \;
 wait
 #
 # delete snapshot
 #
-sudo btrfs subvolume delete /opt/snapshot
+sudo btrfs subvolume delete $3
 #
 # upload to GDrive
 # 
