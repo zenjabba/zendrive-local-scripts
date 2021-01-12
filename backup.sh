@@ -40,7 +40,7 @@ FILE=~/.config/plexapi/config.yml
 if [ -f "$FILE" ]; then /bin/cp ~/.config/plexapi/config.yml /opt/setup_files/; fi
 
 #  backup user crontab
-crontab -l > /opt/etup_files/my-crontab
+crontab -l > /opt/setup_files/my-crontab
 
 # stop poller
 sudo systemctl stop poller.service
