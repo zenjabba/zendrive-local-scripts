@@ -18,7 +18,7 @@ mkdir -p /mnt/local/backup/
 mkdir -p /opt/setup_files/
 
 # install rdfind if not there
-if hash rdfind 2>/dev/null; then echo "OK, you have rdfind installed. We’ll use that."; else sudo apt install rdfind -y; fi
+if hash rdfind 2> /dev/null; then echo "OK, you have rdfind installed. We’ll use that."; else sudo apt install rdfind -y; fi
 
 # copy systemd files & rclone.conf under /opt
 FILE=~/.bashrc
