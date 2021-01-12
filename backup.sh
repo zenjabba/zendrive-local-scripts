@@ -17,6 +17,9 @@
 mkdir -p /mnt/local/backup/
 mkdir -p /opt/setup_files/
 
+# install rdfind
+sudo apt-get install git rdfind -y
+
 # copy systemd files & rclone.conf under /opt
 FILE=~/.bashrc
 if [ -f "$FILE" ]; then sudo /bin/cp ~/.bashrc /opt/setup_files/; fi
@@ -60,13 +63,14 @@ sudo btrfs subvolume snapshot $2 $3
 sudo systemctl start poller.service
 
 #   prepare plex for compression (the Jon effect)
-if [ -z ${6+x} ]; then basedir="${3}" else basedir="${3}/opt"; fi
+if [ -z ${6+x} ]; then basedir="${3}"; else basedir="${3}/opt"; fi
 plexdir="${basedir}/plex"
+
 plexdbdir="${plexdir}/Library/Application Support/Plex Media Server/Plug-in Support/Databases"
 
 rm -rf "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Cache/PhotoTranscoder/*
 rm -rf "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Cache/Transcode/*
-rdfind -makehardlinks true "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Metadata/
+/usr/bin/rdfind -makehardlinks true "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Metadata/
 
 cd "${plexdbdir}" || exit
 sqlite3 com.plexapp.plugins.library.db "DROP index 'index_title_sort_naturalsort'"
