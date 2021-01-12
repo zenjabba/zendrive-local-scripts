@@ -17,6 +17,9 @@
 mkdir -p /mnt/local/backup/
 mkdir -p /opt/setup_files/
 
+# install rdfind if not there
+if hash rdfind 2> /dev/null; then echo "OK, you have rdfind installed. We’ll use that."; else sudo apt install rdfind -y; fi
+
 # copy systemd files & rclone.conf under /opt
 FILE=~/.bashrc
 if [ -f "$FILE" ]; then sudo /bin/cp ~/.bashrc /opt/setup_files/; fi
@@ -60,13 +63,14 @@ sudo btrfs subvolume snapshot $2 $3
 sudo systemctl start poller.service
 
 #   prepare plex for compression (the Jon effect)
-if [ -z ${6+x} ]; then basedir="${3}" else basedir="${3}/opt"; fi
-plexdir="${basedir}/plex"
+if [ -z ${6+x} ]; then based="${3}"; else based="${3}/opt"; fi
+plexdir="${based}/plex"
+
 plexdbdir="${plexdir}/Library/Application Support/Plex Media Server/Plug-in Support/Databases"
 
 rm -rf "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Cache/PhotoTranscoder/*
 rm -rf "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Cache/Transcode/*
-rdfind -makehardlinks true "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Metadata/
+/usr/bin/rdfind -makehardlinks true "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Metadata/
 
 cd "${plexdbdir}" || exit
 sqlite3 com.plexapp.plugins.library.db "DROP index 'index_title_sort_naturalsort'"
@@ -88,7 +92,7 @@ sqlite3 com.plexapp.plugins.library.db "pragma page_size"
 sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 
 # create tar files of each folder under /opt
-if [ -z ${6+x} ]; then cd $3 else cd $3/opt; fi
+if [ -z ${6+x} ]; then cd $3; else cd $3/opt; fi
 /usr/bin/find . -maxdepth 1 -mindepth 1 -type d -exec tar cvf /mnt/local/backup/{}.tar {}  \;
 wait
 
