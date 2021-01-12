@@ -63,8 +63,8 @@ sudo btrfs subvolume snapshot $2 $3
 sudo systemctl start poller.service
 
 #   prepare plex for compression (the Jon effect)
-if [ -z ${6+x} ]; then basedir="${3}"; else basedir="${3}/opt"; fi
-plexdir="${basedir}/plex"
+if [ -z ${6+x} ]; then based="${3}"; else based="${3}/opt"; fi
+plexdir="${based}/plex"
 
 plexdbdir="${plexdir}/Library/Application Support/Plex Media Server/Plug-in Support/Databases"
 
@@ -92,7 +92,7 @@ sqlite3 com.plexapp.plugins.library.db "pragma page_size"
 sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 
 # create tar files of each folder under /opt
-if [ -z ${6+x} ]; then cd $3 else cd $3/opt; fi
+if [ -z ${6+x} ]; then cd $3; else cd $3/opt; fi
 /usr/bin/find . -maxdepth 1 -mindepth 1 -type d -exec tar cvf /mnt/local/backup/{}.tar {}  \;
 wait
 
