@@ -68,6 +68,57 @@ sudo btrfs subvolume snapshot $2 $3
 #
 sudo systemctl start poller.service
 #
+#
+#   prepare plex for compression
+#
+#
+if [ -z ${6+x} ]; then basedir="${3}" else basedir="${3}/opt"; fi
+plexdir="${basedir}/plex"
+plexdbdir="${plexdir}/Library/Application Support/Plex Media Server/Plug-in Support/Databases"
+
+# Clean Up
+rm "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Preferences.xml
+rm -rf "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Cache/PhotoTranscoder/*
+rm -rf "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Cache/Transcode/*
+rdfind -makehardlinks true "${plexdir}"/Library/Application\ Support/Plex\ Media\ Server/Metadata/
+
+# DB TIME
+cd "${plexdbdir}" || exit
+cp com.plexapp.plugins.library.db com.plexapp.plugins.library.db.optimize
+## remove stupid shit
+sqlite3 com.plexapp.plugins.library.db "DROP index 'index_title_sort_naturalsort'"
+sqlite3 com.plexapp.plugins.library.db "DELETE from schema_migrations where version='20180501000000'"
+## pump and dump
+sqlite3 com.plexapp.plugins.library.db .dump > dump.sql
+rm com.plexapp.plugins.library.db
+sqlite3 com.plexapp.plugins.library.db "pragma page_size=32768; vacuum;"
+sqlite3 com.plexapp.plugins.library.db "pragma page_size"
+sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size = 20000000; vacuum;"
+sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
+sqlite3 com.plexapp.plugins.library.db < dump.sql
+sqlite3 com.plexapp.plugins.library.db "pragma page_size"
+sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
+sqlite3 com.plexapp.plugins.library.db "vacuum"
+sqlite3 com.plexapp.plugins.library.db "pragma page_size"
+sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
+sqlite3 com.plexapp.plugins.library.db "pragma optimize"
+sqlite3 com.plexapp.plugins.library.db "pragma page_size"
+sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
+## extra clean up
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM metadata_item_views;"
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM metadata_item_settings;"
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM statistics_bandwidth;"
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM statistics_media;"
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM statistics_resources;"
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM accounts;"
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM devices;"
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM play_queue_generators;"
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM metadata_item_accounts;"
+sqlite3 com.plexapp.plugins.library.db "DELETE FROM metadata_items WHERE metadata_type = 15;"
+## fix messed up dates and reown
+sqlite3 com.plexapp.plugins.library.db "UPDATE metadata_items SET added_at = DATETIME('now') WHERE DATETIME(added_at) > DATETIME('now');;;"
+sqlite3 com.plexapp.plugins.library.db "UPDATE metadata_items SET added_at = originally_available_at WHERE added_at <> originally_available_at AND originally_available_at IS NOT NULL;;"
+
 # create tar files of each folder under /opt
 #
 if [ -z ${6+x} ]; then cd $3 else cd $3/opt; fi
