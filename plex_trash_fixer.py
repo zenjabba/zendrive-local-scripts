@@ -22,6 +22,7 @@ import sqlite3
 import sys
 from shutil import copyfile
 
+# make sure you chmod a+x /opt/plex_trash_fixer/plex_trash_fixer.py
 ############################################################
 # CONFIG
 ############################################################
