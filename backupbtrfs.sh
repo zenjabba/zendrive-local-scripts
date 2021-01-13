@@ -1,6 +1,19 @@
 #!/bin/bash
 # assumes your user as write access to /mnt/local
-# read in content of backupbtrfs.cong
+#
+#  Sample rclone entry for the backup S3 bucket
+#  [zd-backup]
+#  type = s3
+#  provider = Minio
+#  region = us-east-1
+#  chunk_size = 256M
+#  disable_http2 = true
+#  access_key_id = <access_key_id>
+#  secret_access_key = <secret_access_key>
+#  endpoint = https://zenhosting-backup.zenterprise.org/
+#
+
+# read in content of backupbtrfs.conf
 . backupbtrfs.conf
 
 # process user access_kay and foler path
@@ -76,18 +89,10 @@ sqlite3 com.plexapp.plugins.library.db "DELETE from schema_migrations where vers
 sqlite3 com.plexapp.plugins.library.db .dump > dump.sql
 rm com.plexapp.plugins.library.db
 sqlite3 com.plexapp.plugins.library.db "pragma page_size=32768; vacuum;"
-sqlite3 com.plexapp.plugins.library.db "pragma page_size"
 sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size = 20000000; vacuum;"
-sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 sqlite3 com.plexapp.plugins.library.db < dump.sql
-sqlite3 com.plexapp.plugins.library.db "pragma page_size"
-sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 sqlite3 com.plexapp.plugins.library.db "vacuum"
-sqlite3 com.plexapp.plugins.library.db "pragma page_size"
-sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 sqlite3 com.plexapp.plugins.library.db "pragma optimize"
-sqlite3 com.plexapp.plugins.library.db "pragma page_size"
-sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 
 # create tar files of each folder under /opt
 if [ -z ${var6+x} ]; then cd $var3; else cd $var3/opt; fi
@@ -97,12 +102,16 @@ wait
 # delete snapshot
 sudo btrfs subvolume delete $var3
 
+# begin the upload phase
+backup_done=""
+
 # upload/copy to S3
 if [ -z ${var4a+x} ]; then
    echo "you chose not to use the S3 bucket"
 else
    rclone copy /mnt/local/backup/ $var4a:$var5a/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
    wait
+   backup_done="1"
 fi
 # upload to GDrive
 if [ -z ${var4b+x} ]; then
@@ -110,4 +119,16 @@ if [ -z ${var4b+x} ]; then
 else
    rclone move /mnt/local/backup/ $var4b:$var5b/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
    wait
+   backup_done="1"
 fi
+
+#clean up /mnt/local/backup
+if [ -z ${backup_done+x} ]; then
+ :
+else
+   rm -rf /mnt/local/backup/
+fi
+ 
+ 
+ 
+ 
