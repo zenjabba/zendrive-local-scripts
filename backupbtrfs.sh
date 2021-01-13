@@ -3,6 +3,14 @@
 # read in content of backupbtrfs.cong
 . backupbtrfs.conf
 
+# process user access_kay and foler path
+if [ -z ${var4a+x} ]; then
+   :
+else
+   var5a=${var5a1:0:48}
+   var5a="/${var5a}/${var5a2}/"
+fi
+
 #   Make sure folders exist
 mkdir -p /mnt/local/backup/
 mkdir -p /opt/setup_files/
@@ -91,11 +99,15 @@ sudo btrfs subvolume delete $var3
 
 # upload/copy to S3
 if [ -z ${var4a+x} ]; then
+   echo "you chose not to use the S3 bucket"
+else
    rclone copy /mnt/local/backup/ $var4a:$var5a/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
    wait
 fi
 # upload to GDrive
 if [ -z ${var4b+x} ]; then
+   echo "you chose not to use the GDrive bucket"
+else
    rclone move /mnt/local/backup/ $var4b:$var5b/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
    wait
 fi
