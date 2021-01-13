@@ -23,6 +23,7 @@ ExecStart=/usr/bin/rclone mount \
   --buffer-size=256M \
   --dir-cache-time=6000h \
   --attr-timeout=6000h \
+  --rc-no-auth \
   --timeout=15s \
   --umask=002 \
   zenstorage: /mnt/sharedrives/zd-storage
