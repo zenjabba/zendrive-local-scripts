@@ -1,17 +1,7 @@
 #!/bin/bash
 # assumes your user as write access to /mnt/local
-# $1 = folder where your docker-compose.yml is stored
-# $2 = name of source snapshot folder
-# $3 = name of destination snapshot folder
-# $4 = Name of the Google Remote to use for upload
-# $5 = folder path for remote backup
-# $6 = if your BTFS is at / and not /opt then set this to 1, otherwise leave empty
-#
-# sample if you use BTRFS for /opt - 
-# ./backup.sh /opt/docker/ /opt /opt/snapshot GOOGLE Backups
-#
-# sample if you use BTRFS for / -
-# ./backup.sh /opt/docker/ / /opt/snapshot GOOGLE Backups 1
+# read in content of backupbtrfs.cong
+. backupbtrfs.conf
 
 #   Make sure folders exist
 mkdir -p /mnt/local/backup/
@@ -49,12 +39,12 @@ crontab -l > /opt/setup_files/my-crontab
 sudo systemctl stop poller.service
 
 # Down running dockers
-cd $1
+cd $var1
 /usr/bin/docker-compose down
 
 #  Create btrfs snapshot (delete any existing snashots 1st)
-sudo btrfs subvolume delete $3
-sudo btrfs subvolume snapshot $2 $3
+sudo btrfs subvolume delete $var3
+sudo btrfs subvolume snapshot $var2 $var3
 
 #  Bring Docker back up
 /usr/bin/docker-compose up -d
@@ -63,7 +53,7 @@ sudo btrfs subvolume snapshot $2 $3
 sudo systemctl start poller.service
 
 #   prepare plex for compression (the Jon effect)
-if [ -z ${6+x} ]; then based="${3}"; else based="${3}/opt"; fi
+if [ -z ${var6+x} ]; then based="${var3}"; else based="${var3}/opt"; fi
 plexdir="${based}/plex"
 
 plexdbdir="${plexdir}/Library/Application Support/Plex Media Server/Plug-in Support/Databases"
@@ -92,13 +82,20 @@ sqlite3 com.plexapp.plugins.library.db "pragma page_size"
 sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 
 # create tar files of each folder under /opt
-if [ -z ${6+x} ]; then cd $3; else cd $3/opt; fi
+if [ -z ${var6+x} ]; then cd $var3; else cd $var3/opt; fi
 /usr/bin/find . -maxdepth 1 -mindepth 1 -type d -exec tar cvf /mnt/local/backup/{}.tar {}  \;
 wait
 
 # delete snapshot
-sudo btrfs subvolume delete $3
+sudo btrfs subvolume delete $var3
 
+# upload/copy to S3
+if [ -z ${var4a+x} ]; then
+   rclone copy /mnt/local/backup/ $var4a:$var5a/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
+   wait
+fi
 # upload to GDrive
-rclone move /mnt/local/backup/ $4:$5/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
-wait
+if [ -z ${var4b+x} ]; then
+   rclone move /mnt/local/backup/ $var4b:$var5b/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
+   wait
+fi
