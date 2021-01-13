@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Helper script for manual scans with Cloudbox autoscan 1.0 OR above
 # uses the new manual scan function

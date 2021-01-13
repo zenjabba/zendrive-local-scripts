@@ -5,11 +5,10 @@ After=network-online.target
 Type=notify
 User=root
 Group=root
-ExecStartPre=-/usr/bin/sudo /bin/mkdir -p /mnt/sharedrives/zd-storage
-ExecStartPre=-/usr/bin/sudo /bin/chmod -R 775 /mnt/sharedrives/zd-storage
-ExecStartPre=-/usr/bin/sudo /bin/chown -R root:root /mnt/sharedrives/zd-storage
+ExecStartPre=-/usr/bin/sudo /bin/mkdir -p /mnt/sharedrives/zd-storage-metadata
+ExecStartPre=-/usr/bin/sudo /bin/chmod -R 775 /mnt/sharedrives/zd-storage-metadata
+ExecStartPre=-/usr/bin/sudo /bin/chown -R root:root /mnt/sharedrives/zd-storage-metadata
 ExecStartPre=/bin/sleep 10
-ExecStartPost=/opt/scripts/primeunion.sh
 ExecStart=/usr/bin/rclone mount \
   --config=/root/.config/rclone/rclone.conf \
   --allow-other \
@@ -17,21 +16,22 @@ ExecStart=/usr/bin/rclone mount \
   --async-read=false \
   --s3-disable-http2 \
   --s3-chunk-size=256M \
-  --log-file=/var/log/rclone-union.log \
+  --log-file=/var/log/rclone-union-metadata.log \
   --rc \
-  --rc-addr=localhost:5590 \
+  --rc-addr=localhost:5592 \
+  --rc-no-auth \
   --buffer-size=256M \
+  --no-checksum \
   --dir-cache-time=6000h \
   --attr-timeout=6000h \
-  --rc-no-auth \
-  --timeout=10m \
+  --timeout=15s \
   --umask=002 \
-  zenstorage: /mnt/sharedrives/zd-storage
-TimeoutStartSec=900
-ExecStop=/bin/fusermount -uz /mnt/sharedrives/zd-storage
+  zenstorage-metadata: /mnt/sharedrives/zd-storage-metadata
+ExecStop=/bin/fusermount -uz /mnt/sharedrives/zd-storage-metadata
 Restart=on-abort
 RestartSec=5
 StartLimitInterval=4m
 StartLimitBurst=3
+TimeoutStartSec=900
 [Install]
 WantedBy=default.target
