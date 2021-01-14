@@ -112,8 +112,6 @@ sudo systemctl daemon-reload
 # end service files
 FILE=/opt/setup_files/rclone.conf
 if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/rclone.conf /home/seed/.config/rclone/; fi
-FILE=/opt/setup_files/primeunion.sh
-if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/primeunion.sh /opt/scripts/; fi
 FILE=/opt/setup_files/config.yml
 if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/config.yml /home/seed/.config/plexapi/; fi
 
