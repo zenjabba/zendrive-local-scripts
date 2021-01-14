@@ -14,7 +14,9 @@
 #
 
 # read in content of backupbtrfs.conf
-. backupbtrfs.conf
+#  YOU MUST EDIT THIS LINE AND PROVIDE THE PATH TO THE CONFIG FILE
+#  IF IT IS DIFFERENT THAN WHAT IS SHOWN
+. /opt/scripts/backupbtrfs.conf
 
 # process user access_kay and foler path
 if [ -z ${var4a+x} ]; then
