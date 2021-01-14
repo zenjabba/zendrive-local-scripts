@@ -115,7 +115,7 @@ if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/rclone.conf /home/seed/.config/
 FILE=/opt/setup_files/config.yml
 if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/config.yml /home/seed/.config/plexapi/; fi
 
-echo "Please Reboot your Box, and hold your but while we hope all this worked"
+echo "Please Reboot your Box, and hold your butt while we hope all this worked"
 echo ""
 echo "seed password is $password"
 echo ""
