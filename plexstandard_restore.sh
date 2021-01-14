@@ -5,7 +5,7 @@ ACCESS_KEY_ID=""       # enter your ID here
 SECRET_ACCESS_KEY=""   # enter KEY here
 RESTORE_PATH=""        #  provide the path to your S3 backup
 #
-ID=${ACCESS_KEY_ID:0:48}
+
 
 
 ##Shell Setup
@@ -80,6 +80,7 @@ _EOF_
 
 ## BEGIN RESTORE
 #
+ID=${ACCESS_KEY_ID:0:48}
 rclone COPY zd-backup:${ID}/${RESTORE_PATH}/ /opt/ -P
 wait
 #
