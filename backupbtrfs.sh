@@ -22,9 +22,9 @@
 if [ -z ${var4a+x} ]; then
    :
 else
-   var5a=${var5a1:0:48}
+   var5a=${var5a1:0:48}         #sets bucket name to 48 character
+   var5a=${var5a,,}             #sets bucket to lower case
    var5a="/${var5a}/${var5a2}/"
-   var5a=`echo "${var5a,,}"`
 fi
 
 #   Make sure folders exist
