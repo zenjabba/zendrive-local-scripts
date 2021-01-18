@@ -1,17 +1,30 @@
 #!/bin/bash
 # assumes your user as write access to /mnt/local
-# $1 = folder where your docker-compose.yml is stored
-# $2 = name of source snapshot folder
-# $3 = name of destination snapshot folder
-# $4 = Name of the Google Remote to use for upload
-# $5 = folder path for remote backup
-# $6 = if your BTFS is at / and not /opt then set this to 1, otherwise leave empty
 #
-# sample if you use BTRFS for /opt - 
-# ./backup.sh /opt/docker/ /opt /opt/snapshot GOOGLE Backups
+#  Sample rclone entry for the backup S3 bucket
+#  [zd-backup]
+#  type = s3
+#  provider = Minio
+#  region = us-east-1
+#  chunk_size = 256M
+#  disable_http2 = true
+#  access_key_id = <access_key_id>
+#  secret_access_key = <secret_access_key>
+#  endpoint = https://zenhosting-backup.zenterprise.org/
 #
-# sample if you use BTRFS for / -
-# ./backup.sh /opt/docker/ / /opt/snapshot GOOGLE Backups 1
+
+# read in content of backupbtrfs.conf
+#  YOU MUST EDIT THIS LINE AND PROVIDE THE PATH TO THE CONFIG FILE
+#  IF IT IS DIFFERENT THAN WHAT IS SHOWN
+. /opt/scripts/backupbtrfs.conf
+
+# process user access_kay and foler path
+if [ -z ${var4a+x} ]; then
+   :
+else
+   var5a=${var5a1:0:48}
+   var5a="/${var5a}/${var5a2}/"
+fi
 
 #   Make sure folders exist
 mkdir -p /mnt/local/backup/
@@ -50,12 +63,12 @@ crontab -l > /opt/setup_files/my-crontab
 sudo systemctl stop poller.service
 
 # Down running dockers
-cd $1
+cd $var1
 /usr/bin/docker-compose down
 
 #  Create btrfs snapshot (delete any existing snashots 1st)
-sudo btrfs subvolume delete $3
-sudo btrfs subvolume snapshot $2 $3
+sudo btrfs subvolume delete $var3
+sudo btrfs subvolume snapshot $var2 $var3
 
 #  Bring Docker back up
 /usr/bin/docker-compose up -d
@@ -64,7 +77,7 @@ sudo btrfs subvolume snapshot $2 $3
 sudo systemctl start poller.service
 
 #   prepare plex for compression (the Jon effect)
-if [ -z ${6+x} ]; then based="${3}"; else based="${3}/opt"; fi
+if [ -z ${var6+x} ]; then based="${var3}"; else based="${var3}/opt"; fi
 plexdir="${based}/plex"
 
 plexdbdir="${plexdir}/Library/Application Support/Plex Media Server/Plug-in Support/Databases"
@@ -79,27 +92,46 @@ sqlite3 com.plexapp.plugins.library.db "DELETE from schema_migrations where vers
 sqlite3 com.plexapp.plugins.library.db .dump > dump.sql
 rm com.plexapp.plugins.library.db
 sqlite3 com.plexapp.plugins.library.db "pragma page_size=32768; vacuum;"
-sqlite3 com.plexapp.plugins.library.db "pragma page_size"
 sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size = 20000000; vacuum;"
-sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 sqlite3 com.plexapp.plugins.library.db < dump.sql
-sqlite3 com.plexapp.plugins.library.db "pragma page_size"
-sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 sqlite3 com.plexapp.plugins.library.db "vacuum"
-sqlite3 com.plexapp.plugins.library.db "pragma page_size"
-sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 sqlite3 com.plexapp.plugins.library.db "pragma optimize"
-sqlite3 com.plexapp.plugins.library.db "pragma page_size"
-sqlite3 com.plexapp.plugins.library.db "pragma default_cache_size"
 
 # create tar files of each folder under /opt
-if [ -z ${6+x} ]; then cd $3; else cd $3/opt; fi
+if [ -z ${var6+x} ]; then cd $var3; else cd $var3/opt; fi
 /usr/bin/find . -maxdepth 1 -mindepth 1 -type d -exec tar cvf /mnt/local/backup/{}.tar {}  \;
 wait
 
 # delete snapshot
-sudo btrfs subvolume delete $3
+sudo btrfs subvolume delete $var3
 
+# begin the upload phase
+backup_done=""
+
+# upload/copy to S3
+if [ -z ${var4a+x} ]; then
+   echo "you chose not to use the S3 bucket"
+else
+   rclone copy /mnt/local/backup/ $var4a:$var5a/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
+   wait
+   backup_done="1"
+fi
 # upload to GDrive
-rclone move /mnt/local/backup/ $4:$5/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
-wait
+if [ -z ${var4b+x} ]; then
+   echo "you chose not to use the GDrive bucket"
+else
+   rclone move /mnt/local/backup/ $var4b:$var5b/$(date +"%Y-%m-%d")/ --ignore-case --multi-thread-streams=1 --drive-chunk-size=256M --transfers=20 --checkers=40 -vP --drive-use-trash --track-renames --use-mmap --timeout=1m --fast-list --tpslimit=8 --tpslimit-burst=16 --size-only --refresh-times
+   wait
+   backup_done="1"
+fi
+
+#clean up /mnt/local/backup
+if [ -z ${backup_done+x} ]; then
+ :
+else
+   rm -rf /mnt/local/backup/
+fi
+ 
+ 
+ 
+ 

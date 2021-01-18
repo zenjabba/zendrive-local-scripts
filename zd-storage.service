@@ -24,7 +24,6 @@ ExecStart=/usr/bin/rclone mount \
   --vfs-read-chunk-size-limit=off \
   --buffer-size=64M \
   --dir-cache-time=6000h \
-  --attr-timeout=0 \
   --timeout=10m \
   --umask=002 \
   --no-checksum \
