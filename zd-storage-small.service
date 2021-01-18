@@ -13,19 +13,20 @@ ExecStart=/usr/bin/rclone mount \
   --config=/root/.config/rclone/rclone.conf \
   --allow-other \
   --allow-non-empty \
+  --rc-no-auth \
   --async-read=false \
   --s3-disable-http2 \
-  --s3-chunk-size=256M \
-  --log-file=/var/log/rclone-union-small.log \
+  --log-file=/var/log/rclone-union.log \
   --rc \
-  --rc-addr=localhost:5591 \
-  --rc-no-auth \
-  --buffer-size=256M \
-  --no-checksum \
+  --rc-addr=localhost:5590 \
+  --vfs-read-chunk-size=64M \
+  --vfs-read-chunk-size-limit=off \
+  --buffer-size=64M \
   --dir-cache-time=6000h \
-  --attr-timeout=6000h \
-  --timeout=15s \
+  --attr-timeout=0 \
+  --timeout=10m \
   --umask=002 \
+  --no-checksum \
   zenstorage-small: /mnt/sharedrives/zd-storage-small
 ExecStop=/bin/fusermount -uz /mnt/sharedrives/zd-storage-small
 Restart=on-abort
