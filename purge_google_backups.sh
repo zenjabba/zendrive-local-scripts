@@ -9,5 +9,5 @@
 # Sample With Dry Run-
 # ./purge_google 21 GOOGLE:/Backups YES    
 #
-if [ -z ${3+x} ]; then DRY=""; else DRY="--dry-run -vvP"; fi
+if [ -z ${3+x} ]; then DRY="-vvP"; else DRY="--dry-run -vvP"; fi
 /usr/bin/rclone delete --min-age $1d $2 $DRY
