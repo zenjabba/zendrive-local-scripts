@@ -24,12 +24,13 @@ if [ -z ${var4a+x} ]; then
 else
    var5a=${var5a1:0:48}
    var5a="/${var5a}/${var5a2}/"
+   var5a=`echo "${var5a,,}"`
 fi
 
 #   Make sure folders exist
 mkdir -p /mnt/local/backup/
 mkdir -p /opt/setup_files/
-bucketname=`echo "${bucketname,,}"`
+
 
 # install rdfind if not there
 if hash rdfind 2> /dev/null; then echo "OK, you have rdfind installed. We’ll use that."; else sudo apt install rdfind -y; fi
