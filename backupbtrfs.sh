@@ -36,7 +36,7 @@ mkdir -p /opt/setup_files/
 if hash rdfind 2> /dev/null; then echo "OK, you have rdfind installed. We’ll use that."; else sudo apt install rdfind -y; fi
 
 # copy files from backupbtrfs_files.txt under /opt
-input="/path/to/txt/file"
+# read in contents of /opt/scripts/backupbtrfs_files.txt, defined in backupbtrfs.conf
 while IFS= read -r line
 do
   FILE="$line"
