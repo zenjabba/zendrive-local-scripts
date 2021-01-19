@@ -22,9 +22,9 @@
 if [ -z ${var4a+x} ]; then
    :
 else
-   var5a=${var5a1:0:48}
+   var5a=${var5a1:0:48}         #sets bucket name to 48 character
+   var5a=${var5a,,}             #sets bucket to lower case
    var5a="/${var5a}/${var5a2}/"
-   var5a=`echo "${var5a,,}"`
 fi
 
 #   Make sure folders exist
@@ -35,27 +35,13 @@ mkdir -p /opt/setup_files/
 # install rdfind if not there
 if hash rdfind 2> /dev/null; then echo "OK, you have rdfind installed. We’ll use that."; else sudo apt install rdfind -y; fi
 
-# copy systemd files & rclone.conf under /opt
-FILE=~/.bashrc
-if [ -f "$FILE" ]; then sudo /bin/cp ~/.bashrc /opt/setup_files/; fi
-FILE=/etc/security/limits.conf
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/security/limits.conf /opt/setup_files/; fi
-FILE=/etc/sysctl.conf
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/sysctl.conf /opt/setup_files/; fi
-FILE=/etc/systemd/system/zd-storage-metadata.service
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage-metadata.service /opt/setup_files/; fi
-FILE=/etc/systemd/system/zd-storage-small.service
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage-small.service /opt/setup_files/; fi
-FILE=/etc/systemd/system/zd-storage.service
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/zd-storage.service /opt/setup_files/; fi
-FILE=/etc/systemd/system/mergerfs.service
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/mergerfs.service /opt/setup_files/; fi
-FILE=/etc/systemd/system/poller.service
-if [ -f "$FILE" ]; then sudo /bin/cp /etc/systemd/system/poller.service /opt/setup_files/; fi
-FILE=~/.config/rclone/rclone.conf
-if [ -f "$FILE" ]; then /bin/cp ~/.config/rclone/rclone.conf /opt/setup_files/; fi
-FILE=~/.config/plexapi/config.yml
-if [ -f "$FILE" ]; then /bin/cp ~/.config/plexapi/config.yml /opt/setup_files/; fi
+# copy files from backupbtrfs_files.txt under /opt
+# read in contents of /opt/scripts/backupbtrfs_files.txt, defined in backupbtrfs.conf
+while IFS= read -r line
+do
+  FILE="$line"
+  if [ -f "$FILE" ]; then sudo /bin/cp "$line" /opt/setup_files/; fi
+done < "$input"
 
 #  backup user crontab
 crontab -l > /opt/setup_files/my-crontab
