@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#
 # install JQ if not installed
 if hash jq 2> /dev/null; then echo "OK, you have jq installed. We’ll use that."; else sudo apt install jq -y; fi
 #
@@ -9,8 +9,8 @@ logfile=/var/log/poller.log
 #
 checkfor="using custom autoscan trigger"
 
-d1=$(date -d '$1 hour ago' "+%Y/%m/%d:%H:%M:%S")
-d1=$(date -d $d1 +%s)
+#d1=$(date -d '$1 hour ago' "+%Y/%m/%d:%H:%M:%S")
+#d1=$(date -d $d1 +%s)
 
 for log in $logfile
 do
