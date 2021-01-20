@@ -115,6 +115,15 @@ if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/rclone.conf /home/seed/.config/
 FILE=/opt/setup_files/config.yml
 if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/config.yml /home/seed/.config/plexapi/; fi
 
+sudo touch /media/docker-volume.img
+sudo chattr +C /media/docker-volume.img
+sudo fallocate -l 40G /media/docker-volume.img
+sudo mkfs -t ext4 /media/docker-volume.img
+sudo rm -rf /var/lib/docker/*
+sudo echo "/media/docker-volume.img /var/lib/docker ext4 defaults 0 0" >> /etc/fstab
+sudo mount -a
+
+
 echo "Please Reboot your Box, and hold your but while we hope all this worked"
 echo ""
 echo "seed password is $password"
