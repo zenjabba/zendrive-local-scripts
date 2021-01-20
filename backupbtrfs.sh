@@ -118,7 +118,3 @@ if [ -z ${backup_done+x} ]; then
 else
    rm -rf /mnt/local/backup/
 fi
- 
- 
- 
- 
