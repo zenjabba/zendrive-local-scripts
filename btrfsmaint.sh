@@ -1,6 +1,5 @@
 #!/bin/bash
-#Clones btrfsmaintenance repo.  Copies service/timer files and enables them. 
-#Change the user (seed) to match your setup
+#Clones btrfsmaintenance repo.  Copies service/timer files and enables them.
 git clone https://github.com/kdave/btrfsmaintenance.git /opt/btrfsmaintenance
 sudo chmod -R 775 /opt/btrfsmaintenance
 sudo chown -R seed:seed /opt/btrfsmaintenance
