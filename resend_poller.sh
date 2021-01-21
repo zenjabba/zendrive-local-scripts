@@ -14,8 +14,12 @@ if [ -z "$1" ]; then
 fi
 
 FILE="/opt/scripts/ascan.sh"
-if [ -f "$FILE" ]; then echo "ascan.sh is not in /opt/scripts/"; usage fi
-
+if [ -f "$FILE" ]; then 
+  :
+else
+  echo "ascan.sh is not in /opt/scripts/"
+  usage 
+fi
 # install JQ if not installed
 if hash jq 2> /dev/null; then echo "OK, you have jq installed. We will use that."; else sudo apt install jq -y; fi
 #
