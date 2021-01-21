@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # install JQ if not installed
-if hash jq 2> /dev/null; then echo "OK, you have jq installed. We ^`^yll use that."; else sudo apt install jq -y; fi
+if hash jq 2> /dev/null; then echo "OK, you have jq installed. We will use that."; else sudo apt install jq -y; fi
 #
 # point this to where your poller log sits
 logfile=/var/log/poller.log
