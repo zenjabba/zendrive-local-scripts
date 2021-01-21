@@ -85,7 +85,7 @@ sudo echo "/media/docker-volume.img /var/lib/docker ext4 defaults 0 0" >> /etc/f
 sudo mount -a
 
 
-echo "Please Reboot your Box, and hold your but while we hope all this worked"
+echo "Please Reboot your Box, and hold your butt while we hope all this worked"
 echo ""
 echo "seed password is $password"
 echo ""
