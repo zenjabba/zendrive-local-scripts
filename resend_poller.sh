@@ -13,13 +13,6 @@ if [ -z "$1" ]; then
   usage
 fi
 
-FILE="/opt/scripts/ascan.sh"
-if [ -f "$FILE" ]; then 
-  :
-else
-  echo "ascan.sh is not in /opt/scripts/"
-  usage 
-fi
 # install JQ if not installed
 if hash jq 2> /dev/null; then echo "OK, you have jq installed. We will use that."; else sudo apt install jq -y; fi
 #
@@ -51,6 +44,8 @@ unset IFS
 for i2 in "${uniq[@]}"; 
 do 
    val=${i2//\"/}
-   /opt/scripts/ascan.sh "/mnt/unionfs${val}/"
+   curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${val}"
+   if [ $? -ne 0 ]; then echo "Unable to reach autoscan ERROR: $?";fi
+   if [ $? -eq 0 ]; then echo "${val} added to your autoscan queue!";fi
    sleep 5
 done
