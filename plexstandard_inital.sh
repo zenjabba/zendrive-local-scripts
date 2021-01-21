@@ -1,11 +1,8 @@
 #!/bin/bash
 #
 #   ENTER INFO HERE
-ACCESS_KEY_ID=""       # enter your ID here
-SECRET_ACCESS_KEY=""   # enter KEY here
-RESTORE_PATH=""        #  provide the path to your S3 backup
-#
-
+ACCESS_KEY_ID="$1"       # enter your ID here
+SECRET_ACCESS_KEY="$2"   # enter KEY here
 
 
 ##Shell Setup
@@ -47,7 +44,7 @@ cat > /etc/systemd/system/docker.service.d/override.conf << "_EOF_"
 [Unit]
 After=mergerfs.service
 [Service]
-ExecStartPre=/bin/sleep 60
+ExecStartPre=/bin/sleep 15
 _EOF_
 
 ## Script Setup
@@ -67,7 +64,7 @@ gid=$(id -g seed)
 
 ## CREATE S3 BACKUP RCLONE CONF
 cat > /home/seed/.config/rclone/rclone.conf << "_EOF_"
-[zd-backup]
+[zenstorage]
 type = s3
 provider = Minio
 region = us-east-1
@@ -75,45 +72,9 @@ chunk_size = 256M
 disable_http2 = true
 access_key_id = ${ACCESS_KEY_ID}
 secret_access_key = ${SECRET_ACCESS_KEY}
-endpoint = https://zenhosting-backup.zenterprise.org/
+endpoint = https://zendrives3.digitalmonks.org/
 _EOF_
 
-## BEGIN RESTORE
-#
-ID=${ACCESS_KEY_ID:0:48}
-rclone COPY zd-backup:${ID}/${RESTORE_PATH}/ /opt/ -P
-wait
-#
-# Extract backup Tars
-cd /opt
-tar -xvf *.tar
-wait
-rm *.tar
-sudo chown -R seed:seed /opt
-wait
-cd /opt/setup_files
-FILE=/opt/setup_files/.bashrc
-if [ -f "$FILE" ]; then sudo cp .bashrc /home/seed/; fi
-FILE=/opt/setup_files/limits.conf
-if [ -f "$FILE" ]; then sudo cp limits.conf /etc/security/; fi
-sudo cp *.service /etc/systemd/system/
-sudo systemctl daemon-reload
-FILE=/opt/setup_files/zd-storage-metadata.service
-if [ -f "$FILE" ]; then sudo systemctl enable zd-storage-metadata.service; fi
-FILE=/opt/setup_files/zd-storage-small.service
-if [ -f "$FILE" ]; then sudo systemctl enable zd-storage-small.service; fi
-FILE=/opt/setup_files/zd-storage.service
-if [ -f "$FILE" ]; then sudo systemctl enable zd-storage.service; fi
-FILE=/opt/setup_files/mergerfs.service
-if [ -f "$FILE" ]; then sudo systemctl enable mergerfs.service; fi
-FILE=/opt/setup_files/poller.service
-if [ -f "$FILE" ]; then sudo systemctl enable poller.service; fi
-sudo systemctl daemon-reload
-# end service files
-FILE=/opt/setup_files/rclone.conf
-if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/rclone.conf /home/seed/.config/rclone/; fi
-FILE=/opt/setup_files/config.yml
-if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/config.yml /home/seed/.config/plexapi/; fi
 
 sudo touch /media/docker-volume.img
 sudo chattr +C /media/docker-volume.img
