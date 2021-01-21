@@ -1,5 +1,21 @@
 #!/bin/bash
 #
+function usage {
+  echo ""
+  echo "Usage: resend_poller.sh 5 "
+  echo ""
+  echo "will send the last 5 hours of poller data to autoscan"
+  exit 1
+}
+
+if [ -z "$1" ]; then
+  echo "please provide a value for hours ago"
+  usage
+fi
+
+FILE="/opt/scripts/ascan.sh"
+if [ -f "$FILE" ]; then echo "ascan.sh is not in /opt/scripts/"; usage fi
+
 # install JQ if not installed
 if hash jq 2> /dev/null; then echo "OK, you have jq installed. We will use that."; else sudo apt install jq -y; fi
 #
