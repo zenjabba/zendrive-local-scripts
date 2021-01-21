@@ -46,6 +46,5 @@ do
    val=${i2//\"/}
    curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${val}"
    if [ $? -ne 0 ]; then echo "Unable to reach autoscan ERROR: $?";fi
-   if [ $? -eq 0 ]; then echo "$1 added to your autoscan queue!";fi
    sleep 5
 done
