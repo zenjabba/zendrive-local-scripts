@@ -26,7 +26,7 @@ d1=$(date -d "${d1}" +%s)
 #
 declare -a values
 declare -a valuelist
-mapfile -t values <<< $(jq -r '. | select(.message|test("custom."))' "$logfile")
+mapfile -t values <<< $(jq -c '. | select(.message|test("custom."))' "$logfile")
 for i in "${values[@]}"
 do
     d2=$(echo "${i}" |  jq -r  '.time')
@@ -44,7 +44,7 @@ unset IFS
 for i2 in "${uniq[@]}"; 
 do 
    val=${i2//\"/}
-   curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=${val}"
+   curl -G --request POST --url "http://127.0.0.1:3030/triggers/manual" --data-urlencode "dir=/mnt/unionfs${val}/"
    if [ $? -ne 0 ]; then echo "Unable to reach autoscan ERROR: $?";fi
    if [ $? -eq 0 ]; then echo "${val} added to your autoscan queue!";fi
    sleep 5
