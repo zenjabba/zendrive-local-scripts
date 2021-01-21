@@ -26,7 +26,7 @@ d1=$(date -d "${d1}" +%s)
 #
 declare -a values
 declare -a valuelist
-mapfile -t values <<< $(jq -c '. | select(.message|test("custom."))' "$logfile")
+mapfile -t values <<< $(jq -r '. | select(.message|test("custom."))' "$logfile")
 for i in "${values[@]}"
 do
     d2=$(echo "${i}" |  jq -r  '.time')
