@@ -18,7 +18,7 @@
 #  IF IT IS DIFFERENT THAN WHAT IS SHOWN
 . /opt/scripts/backupbtrfs.conf
 
-# process user access_kay and foler path
+# process user access_key and foler path
 if [ -z ${var4a+x} ]; then
    :
 else
@@ -47,7 +47,7 @@ done < "$input"
 crontab -l > /opt/setup_files/my-crontab
 
 # save info on curent kernel vesion
-/bin/uname -a > /opt/setup_files/kernel_version.txt
+/bin/uname -r > /opt/setup_files/kernel_version.txt
 
 # stop poller
 sudo systemctl stop poller.service
