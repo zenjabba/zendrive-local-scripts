@@ -46,6 +46,9 @@ done < "$input"
 #  backup user crontab
 crontab -l > /opt/setup_files/my-crontab
 
+# save info on curent kernel vesion
+/bin/uname -a > /opt/setup_files/kernel_version.txt
+
 # stop poller
 sudo systemctl stop poller.service
 
