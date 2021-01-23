@@ -1,8 +1,26 @@
 #!/bin/bash
 #
 #   ENTER INFO HERE
-ACCESS_KEY_ID="$1"       # enter your ID here
-SECRET_ACCESS_KEY="$2"   # enter KEY here
+function usage {
+  echo ""
+  echo "Usage: $0 \"Access and Secret Keys\" "
+  echo ""
+  echo "How to find your keys:"
+  echo "    Head over to https://dashboard.zenjabba.com/ and you will find your access and secret keys listed in your services"
+  echo "    They will look somthing like:"
+  echo "    AABBCCDDEEFFGGHH IIJJKKLLMMNNOOPPQQRRSSTT "
+  echo "    Re-run $0 with \"$0 Access_Key Secret_Key\" "
+  echo ""
+  exit 1
+}
+if [ -z "$1" ]; then
+  echo "    Re-run $0 with \"$0 Access_Key Secret_Key\"
+  usage
+fi
+
+
+ACCESS_KEY_ID="$1"       
+SECRET_ACCESS_KEY="$2"   
 
 
 ##Shell Setup
@@ -42,8 +60,10 @@ sudo apt-get upgrade -y
 ## and a systemd override for docker to wait for mergerfs
 cat > /etc/systemd/system/docker.service.d/override.conf << "_EOF_"
 [Unit]
+After=
 After=mergerfs.service
 [Service]
+ExecStartPre=
 ExecStartPre=/bin/sleep 15
 _EOF_
 
@@ -92,6 +112,11 @@ sudo mount -a
 sudo cp /opt/scripts/zendrive-local-scripts/docker-compose*.yml /opt/docker
 sudo cp /opt/scripts/zendrive-local-scripts/.env /opt/docker
 sudo cp /opt/scripts/zendrive-local-scripts/dynamic.yml /opt/traefik
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/mergerfs.service /etc/systemd/system/mergerfs.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage.service /etc/systemd/system/zenstorage.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-small.service /etc/systemd/system/zenstorage-small.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-metadata.service /etc/systemd/system/zenstorage-small.metadata
+systemctl daemon-reload
 sudo chown -R seed:seed /opt
 
 ## SYMLINK the Service Files ##
