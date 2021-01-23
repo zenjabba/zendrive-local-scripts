@@ -14,7 +14,7 @@ function usage {
   exit 1
 }
 if [ -z "$1" ]; then
-  echo "    Re-run $0 with \"$0 Access_Key Secret_Key\"
+  echo "    Re-run $0 with \"$0 Access_Key Secret_Key\" "
   usage
 fi
 
