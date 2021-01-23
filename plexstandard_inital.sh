@@ -112,26 +112,21 @@ sudo mount -a
 sudo cp /opt/scripts/zendrive-local-scripts/docker-compose*.yml /opt/docker
 sudo cp /opt/scripts/zendrive-local-scripts/.env /opt/docker
 sudo cp /opt/scripts/zendrive-local-scripts/dynamic.yml /opt/traefik
-ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/mergerfs.service /etc/systemd/system/mergerfs.service
-ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage.service /etc/systemd/system/zenstorage.service
-ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-small.service /etc/systemd/system/zenstorage-small.service
-ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-metadata.service /etc/systemd/system/zenstorage-small.metadata
-systemctl daemon-reload
 sudo chown -R seed:seed /opt
 
 ## SYMLINK the Service Files ##
 ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/mergerfs.service /etc/systemd/system/mergerfs.service
-ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage.service /etc/systemd/system/zenstorage.service
-ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-small.service /etc/systemd/system/zenstorage-small.service
-ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-metadata.service /etc/systemd/system/zenstorage-metadata.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zd-storage.service /etc/systemd/system/zd-storage.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zd-storage-small.service /etc/systemd/system/zd-storage-small.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zd-storage-metadata.service /etc/systemd/system/zd-storage-metadata.service
 ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/primeunion.sh /opt/scripts/primeunion.sh
 chmod +x /opt/scripts/primeunion.sh
 #
 sudo systemctl daemon-reload
 sudo systemctl enable mergerfs.service
-sudo systemctl enable zenstorage.service
-sudo systemctl enable zenstorage-small.service
-sudo systemctl enable zenstorage-metadata.service
+sudo systemctl enable zd-storage.service
+sudo systemctl enable zd-storage-small.service
+sudo systemctl enable zd-storage-metadata.service
 
 echo "Please Reboot your Box, and hold your butt while we hope all this worked"
 echo ""
