@@ -1,8 +1,26 @@
 #!/bin/bash
 #
 #   ENTER INFO HERE
-ACCESS_KEY_ID="$1"       # enter your ID here
-SECRET_ACCESS_KEY="$2"   # enter KEY here
+function usage {
+  echo ""
+  echo "Usage: $0 \"Access and Secret Keys\" "
+  echo ""
+  echo "How to find your keys:"
+  echo "    Head over to https://dashboard.zenjabba.com/ and you will find your access and secret keys listed in your services"
+  echo "    They will look somthing like:"
+  echo "    AABBCCDDEEFFGGHH IIJJKKLLMMNNOOPPQQRRSSTT "
+  echo "    Re-run $0 with \"$0 Access_Key Secret_Key\" "
+  echo ""
+  exit 1
+}
+if [ -z "$1" ]; then
+  echo "    Re-run $0 with \"$0 Access_Key Secret_Key\"
+  usage
+fi
+
+
+ACCESS_KEY_ID="$1"       
+SECRET_ACCESS_KEY="$2"   
 
 
 ##Shell Setup
