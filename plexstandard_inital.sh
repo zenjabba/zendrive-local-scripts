@@ -101,7 +101,7 @@ _EOF_
 
 sudo touch /media/docker-volume.img
 sudo chattr +C /media/docker-volume.img
-sudo fallocate -l 40G /media/docker-volume.img
+sudo fallocate -l 20G /media/docker-volume.img
 sudo mkfs -t ext4 /media/docker-volume.img
 sudo rm -rf /var/lib/docker/*
 sudo echo "/media/docker-volume.img /var/lib/docker ext4 defaults 0 0" >> /etc/fstab
