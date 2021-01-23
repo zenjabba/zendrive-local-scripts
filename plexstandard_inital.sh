@@ -94,6 +94,20 @@ sudo cp /opt/scripts/zendrive-local-scripts/.env /opt/docker
 sudo cp /opt/scripts/zendrive-local-scripts/dynamic.yml /opt/traefik
 sudo chown -R seed:seed /opt
 
+## SYMLINK the Service Files ##
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/mergerfs.service /etc/systemd/system/mergerfs.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage.service /etc/systemd/system/zenstorage.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-small.service /etc/systemd/system/zenstorage-small.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-metadata.service /etc/systemd/system/zenstorage-metadata.service
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/primeunion.sh /opt/scripts/primeunion.sh
+chmod +x /opt/scripts/primeunion.sh
+#
+sudo systemctl daemon-reload
+sudo systemctl enable mergerfs.service
+sudo systemctl enable zenstorage.service
+sudo systemctl enable zenstorage-small.service
+sudo systemctl enable zenstorage-metadata.service
+
 echo "Please Reboot your Box, and hold your butt while we hope all this worked"
 echo ""
 echo "seed password is $password"
