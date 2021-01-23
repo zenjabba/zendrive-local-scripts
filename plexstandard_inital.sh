@@ -60,8 +60,10 @@ sudo apt-get upgrade -y
 ## and a systemd override for docker to wait for mergerfs
 cat > /etc/systemd/system/docker.service.d/override.conf << "_EOF_"
 [Unit]
+After=
 After=mergerfs.service
 [Service]
+ExecStartPre=
 ExecStartPre=/bin/sleep 15
 _EOF_
 
