@@ -1,0 +1,260 @@
+### PLEX2 ###
+  plex2:
+    image: "linuxserver/plex:latest"
+    container_name: plex2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.plex2.rule=Host(`plex2.${TLD}`)"
+      - "traefik.http.routers.plex2.entrypoints=websecure"
+      - "traefik.http.routers.plex2.tls.options=securetls@file"
+      - "traefik.http.routers.plex2.tls.certresolver=cfdns"
+      - "traefik.http.routers.plex2.middlewares=secureHeaders@file"
+      - "traefik.http.services.plex2.loadbalancer.server.port=32400"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/dev/shm:/dev/shm"
+      - "${APPDATA_ROOT}/plex2:/config"
+      - "${APPDATA_ROOT}/plex2/transcode:/transcode"
+      - "/mnt:/mnt"
+    ports:
+      - "32401:32400"    
+    environment:
+      PUID: "${UID}"
+      PGID: "${UID}"
+      PLEX_UID: "${UID}"
+      PLEX_GID: "${UID}"
+      ADVERTISE_IP: "https://plex2.${TLD}:443"
+      PLEX_CLAIM: "claim-LydRDYYvybZgmZ5YNdCE"
+    devices:
+      - "/dev/dri:/dev/dri"   
+    extra_hosts:
+      - "analytics.plex.tv:127.0.0.1"
+      - "metrics.plex.tv:127.0.0.1"
+###  JELLYFIN  ####
+  jellyfin:
+    image: hotio/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      PUID: "${UID}"
+      PGID: "${UID}"
+      autoheal: "true"      
+    volumes:
+      - "${APPDATA_ROOT}/jellyfin:/config"
+      - "/mnt:/mnt"
+      - "${APPDATA_ROOT}/jellyfin/transcodes:/transcode:rw"
+    devices:
+      - "/dev/dri:/dev/dri" 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.${TLD}`)"
+      - "traefik.http.routers.jellyfin.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin.tls.options=securetls@file"
+      - "traefik.http.routers.jellyfin.tls.certresolver=cfdns"
+      - "traefik.http.routers.jellyfin.middlewares=secureHeaders@file"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+    restart: unless-stopped  
+###  EMBY  ####
+  emby:
+    image: emby/embyserver
+    container_name: emby
+    environment:
+      UID: "${UID}"
+      GID: "${UID}"
+      autoheal: "true"      
+    volumes:
+      - "${APPDATA_ROOT}/emby:/config"
+      - "/mnt:/mnt"
+      - "${APPDATA_ROOT}/emby/transcodes:/transcode:rw"
+    devices:
+      - "/dev/dri:/dev/dri" 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.emby.rule=Host(`emby.${TLD}`)"
+      - "traefik.http.routers.emby.entrypoints=websecure"
+      - "traefik.http.routers.emby.tls.options=securetls@file"
+      - "traefik.http.routers.emby.tls.certresolver=cfdns"
+      - "traefik.http.routers.emby.middlewares=secureHeaders@file"
+      - "traefik.http.services.emby.loadbalancer.server.port=8096"
+    restart: unless-stopped 
+### PORTAINER ###
+  portainer:
+        container_name: "portainer"
+        environment:
+            - autoheal=true
+        labels:
+          - "traefik.enable=true"
+          - "traefik.http.routers.portainer.rule=Host(`portainer.${TLD}`)"
+          - "traefik.http.routers.portainer.entrypoints=websecure"
+          - "traefik.http.routers.portainer.tls.options=securetls@file"
+          - "traefik.http.routers.portainer.tls.certresolver=cfdns"
+          - "traefik.http.routers.portainer.middlewares=secureHeaders@file"
+          - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+        image: "portainer/portainer"
+        restart: always
+        volumes:
+            - "/opt/docker-config/portainer/data:/data"
+            - /var/run/docker.sock:/var/run/docker.sock   
+### ORGANIZR ###      
+  organizr:
+    image: "organizr/organizr"
+    container_name: organizr
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.organizr.rule=Host(`${TLD}`)"
+      - "traefik.http.routers.organizr.entrypoints=websecure"
+      - "traefik.http.routers.organizr.tls.options=securetls@file"
+      - "traefik.http.routers.organizr.tls.certresolver=cfdns"
+      - "traefik.http.routers.organizr.middlewares=secureHeaders@file"
+    volumes:
+      - "${APPDATA_ROOT}/organizr:/config"
+    environment:
+      PUID: "${UID}"
+      PGID: "${UID}"
+      fpm: "true"
+      branch: "master" 
+### SPEEDTEST ###
+  speedtest:
+    container_name: "speedtest"
+    image: "satzisa/html5-speedtest"
+    environment:
+      PUID: "${UID}"
+      GUID: "${UID}"
+    volumes:
+      - "${APPDATA_ROOT}/speedtest:/var/www/html"     
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.speedtest.rule=Host(`speedtest.${TLD}`)"
+      - "traefik.http.routers.speedtest.entrypoints=websecure"
+      - "traefik.http.routers.speedtest.tls.options=securetls@file"
+      - "traefik.http.routers.speedtest.tls.certresolver=cfdns"
+      - "traefik.http.routers.speedtest.middlewares=secureHeaders@file"
+      - "traefik.http.services.speedtest.loadbalancer.server.port=80" 
+### XBACKBONE ###
+  xbackbone:
+    container_name: "xbackbone"
+    image: "pe46dro/xbackbone-docker"
+    environment:
+      PUID: "${UID}"
+      GUID: "${UID}"
+      URL: "https:\/\/i.${TLD}"
+      PHP_UPLOAD_MAX_FILESIZE: "1G"
+      PHP_POST_MAX_SIZE: "1G"
+    volumes:
+      - "${APPDATA_ROOT}/xbackbone/cfg:/app/resources/database" 
+      - "${APPDATA_ROOT}/xbackbone/logs:/app/logs" 
+      - "/mnt/local/xbackbone/:/app/storage"     
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.xbackbone.rule=Host(`i.${TLD}`)"
+      - "traefik.http.routers.xbackbone.entrypoints=websecure"
+      - "traefik.http.routers.xbackbone.tls.options=securetls@file"
+      - "traefik.http.routers.xbackbone.tls.certresolver=cfdns"
+      - "traefik.http.routers.xbackbone.middlewares=secureHeaders@file"
+      - "traefik.http.services.xbackbone.loadbalancer.server.port=80"   
+### CALIBRE-WEB ###
+  calibre-web:
+    container_name: "calibre-web"
+    image: "linuxserver/calibre-web:latest"
+    environment:
+      PUID: "${UID}"
+      GUID: "${UID}"
+      USE_CONFIG_DIR: "true"
+      DOCKER_MODS: "linuxserver/calibre-web:calibre"   
+    volumes:
+      - "${APPDATA_ROOT}/calibre-web/config:/config" 
+      - "${APPDATA_ROOT}/calibre-web:/calibre-web" 
+      - "/mnt/unionfs/ebooks/Books_English:/books"  
+      - "/mnt:/mnt"      
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.books.rule=Host(`books.${TLD}`)"
+      - "traefik.http.routers.books.entrypoints=websecure"
+      - "traefik.http.routers.books.tls.options=securetls@file"
+      - "traefik.http.routers.books.tls.certresolver=cfdns"
+      - "traefik.http.routers.books.middlewares=secureHeaders@file"
+      - "traefik.http.services.books.loadbalancer.server.port=8083"
+### WIKI.JS ###
+  wiki:
+    image: "ghcr.io/linuxserver/wikijs"
+    container_name: wiki
+    restart: always  
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "${APPDATA_ROOT}/wiki/config:/config"
+      - "${APPDATA_ROOT}/wiki/data:/data"
+    labels:
+      traefik.enable: true
+      traefik.http.routers.wiki.entrypoints: websecure
+      traefik.http.routers.wiki.rule: "Host(`wiki.${TLD}`)"
+      traefik.http.routers.wiki.tls: true
+      traefik.http.routers.wiki.tls.certresolver: cfdns
+      traefik.http.routers.wiki.middlewares: secureHeaders@file
+      traefik.http.services.wiki.loadbalancer.server.port: 3000
+      traefik.http.services.wiki.loadbalancer.healthcheck.port: 3000
+    environment:
+      PUID: "${UID}"
+      PGID: "${UID}"  
+### TRANSFER.SH ###      
+  transfer:
+    image: dutchcoders/transfer.sh:latest
+    container_name: transfer
+    volumes:
+      - "${APPDATA_ROOT}/transfer:/data/"
+    command: --provider local --basedir /data/
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transfer.rule=Host(`transfer.${TLD}`)"
+      - "traefik.http.routers.transfer.entrypoints=websecure"
+      - "traefik.http.routers.transfer.tls.options=securetls@file"
+      - "traefik.http.routers.transfer.tls.certresolver=cfdns"
+      - "traefik.http.routers.transfer.middlewares=secureHeaders@file"
+      - "traefik.http.services.transfer.loadbalancer.server.port=8080"  
+### AUTOHEAL ###      
+  autoheal:
+    container_name: "autoheal"
+    hostname: autoheal
+    restart: always
+    image: willfarrell/autoheal
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: "all"
+    volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"      
+### BITWARDEN ###
+  bitwarden:
+      image: "bitwardenrs/server:latest"
+      container_name: bitwarden
+      restart: always
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.bitwarden.rule=Host(`bitwarden.${TLD}`)"
+        - "traefik.http.routers.bitwarden.entrypoints=websecure"
+        - "traefik.http.routers.bitwarden.tls.options=securetls@file"
+        - "traefik.http.routers.bitwarden.tls.certresolver=cfdns"
+        - "traefik.http.routers.bitwarden.middlewares=secureHeaders@file"
+        - "traefik.http.services.bitwardenloadbalancer.server.port=80"
+      volumes:
+        - "/etc/localtime:/etc/localtime:ro"
+        - "${APPDATA_ROOT}/bitwarden:/data"
+      environment:
+        autoheal: "true"
+        WEBSOCKET_ENABLED: 'true' # Required to use websockets
+        SIGNUPS_ALLOWED: 'true' 
+### OVERSEERR ###
+  overseerr:
+    image: hotio/overseerr
+    container_name: overseerr
+    restart: always
+    environment:
+      PUID: "${UID}"
+      PGID: "${UID}"
+      autoheal: "true"
+    volumes:
+      - "${APPDATA_ROOT}/overseerr:/config"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.overseerr.rule=Host(`overseerr.${TLD}`)"
+      - "traefik.http.routers.overseerr.entrypoints=websecure"
+      - "traefik.http.routers.overseerr.tls.options=securetls@file"
+      - "traefik.http.routers.overseerr.tls.certresolver=cfdns"
+      - "traefik.http.services.overseerr.loadbalancer.server.port=5055"

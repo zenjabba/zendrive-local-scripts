@@ -1,0 +1,119 @@
+version: "3.7"
+services:
+# system
+  traefik:
+    image: "traefik:latest"
+    container_name: traefik
+    restart: always
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/opt/traefik:/etc/traefik"
+    ports:
+      - "443:443"
+      - "8080:8080"
+      - "80:80"
+    environment:
+      CLOUDFLARE_EMAIL: "${CLOUDFLARE_EMAIL}"
+      CLOUDFLARE_API_KEY: "${CLOUDFLARE_API_KEY}"
+    command:
+      - "--global.sendanonymoususage=false"
+      - "--providers.file.directory=/etc/traefik"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--entryPoints.websecure.forwardedHeaders.insecure"
+      - "--entryPoints.websecure.forwardedHeaders.insecure=true"
+      - "--entryPoints.websecure.proxyProtocol.insecure=true"
+      - "--certificatesresolvers.cfdns.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.cfdns.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.cfdns.acme.storage=/etc/traefik/acme.json"
+      # logging
+      - "--accesslog=true"
+      - "--log=true"
+      - "--log.filepath=/var/log/traefik.log"
+      - "--log.level=debug"
+      # Dashboard
+      - "--api.dashboard=true"
+      - "--api=true"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`dash.${TLD}`) && (PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.options=securetls@file"
+      - "traefik.http.routers.traefik.tls.certresolver=cfdns"
+      - "traefik.http.routers.traefik.middlewares=secureHeaders@file"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$ZYtV.rCA$$zAhMVxpJn9vnh0/xgL3yC1"
+  plex:
+  plex:
+    image: "linuxserver/plex:latest"
+    container_name: plex
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.plex.rule=Host(`plex.${TLD}`)"
+      - "traefik.http.routers.plex.entrypoints=websecure"
+      - "traefik.http.routers.plex.tls.options=securetls@file"
+      - "traefik.http.routers.plex.tls.certresolver=cfdns"
+      - "traefik.http.routers.plex.middlewares=secureHeaders@file"
+      - "traefik.http.services.plex.loadbalancer.server.port=32400"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/dev/shm:/dev/shm"
+      - "${APPDATA_ROOT}/plex:/config"
+      - "${APPDATA_ROOT}/plex_db_backups:/backup"
+      - "${APPDATA_ROOT}/plex/transcode:/transcode"
+      - "/mnt:/mnt"
+    ports:
+      - "127.0.0.1:32400:32400"    
+    environment:
+      PUID: "${UID}"
+      PGID: "${UID}"
+      PLEX_UID: "${UID}"
+      PLEX_GID: "${UID}"
+      ADVERTISE_IP: "https://plex.${TLD}:443"
+    devices:
+      - "/dev/dri:/dev/dri"   
+    extra_hosts:
+      - "analytics.plex.tv:127.0.0.1"
+      - "metrics.plex.tv:127.0.0.1"    
+### AUTOSCAN ###
+  autoscan:
+        container_name: "autoscan"
+        ports:
+            - 127.0.0.1:3030:3030
+        image: "cloudb0x/autoscan:master"
+        restart: always
+        volumes:
+            - "${APPDATA_ROOT}/autoscan:/config"
+            - "/mnt:/mnt"       
+### tautulli ###
+  tautulli:
+    image: "linuxserver/tautulli"
+    container_name: tautulli
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tautulli.rule=Host(`tautulli.${TLD}`)"
+      - "traefik.http.routers.tautulli.entrypoints=websecure"
+      - "traefik.http.routers.tautulli.tls.options=securetls@file"
+      - "traefik.http.routers.tautulli.tls.certresolver=cfdns"
+      - "traefik.http.routers.tautulli.middlewares=secureHeaders@file"
+      - "traefik.http.services.tautulli.loadbalancer.server.port=8181"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "${APPDATA_ROOT}/tautulli:/config"
+      - "${APPDATA_ROOT}/tautulli/transcode:/transcode"
+    environment:
+      PUID: "${UID}"
+      PGID: "${UID}"
+### PLEX PATROL ###
+# You must create the settings.ini file within /opt/plex_patrol manually.
+#  plex_patrol:
+#    container_name: "plex_patrol"
+#    environment:
+#      PUID: "${UID}"
+#      PGID: "${UID}"
+#    image: "cloudb0x/plex_patrol:latest"
+#    restart: always
+#    volumes:
+#      - "${APPDATA_ROOT}/plex_patrol:/config"

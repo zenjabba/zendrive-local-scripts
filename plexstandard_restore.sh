@@ -14,9 +14,9 @@ sudo apt remove mlocate -y
 #sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 ## Kernel Things
-wget -O /usr/local/bin/ https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
-chmod +x /usr/local/bin/ubuntu-mainline-kernel.sh
-sudo /usr/local/bin/ubuntu-mainline-kernel.sh -i
+#wget -O /usr/local/bin/ https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
+#chmod +x /usr/local/bin/ubuntu-mainline-kernel.sh
+#sudo /usr/local/bin/ubuntu-mainline-kernel.sh -i
 
 ## Folder Setup
 sudo mkdir /mnt/{local,sharedrives,unionfs}
@@ -91,29 +91,36 @@ wait
 rm *.tar
 sudo chown -R seed:seed /opt
 wait
-cd /opt/setup_files
-FILE=/opt/setup_files/.bashrc
-if [ -f "$FILE" ]; then sudo cp .bashrc /home/seed/; fi
-FILE=/opt/setup_files/limits.conf
-if [ -f "$FILE" ]; then sudo cp limits.conf /etc/security/; fi
-sudo cp *.service /etc/systemd/system/
+
+## restore all the saved files in setup_files ##
+FILE="/opt/scripts/backupbtrfs.conf"
+if [ -f "$FILE" ]; then
+    . /opt/scripts/backupbtrfs.conf
+    while IFS= read -r line
+    do
+    FILE="$line"
+    if [ -f "$FILE" ]; then
+        fname=${FILE##*/} 
+        pname=${FILE%/*}
+        sudo /bin/cp /opt/setup_files/"${fname}" "${pname}"; 
+    fi
+    done < "$input"
+fi
+
 sudo systemctl daemon-reload
-FILE=/opt/setup_files/zd-storage-metadata.service
-if [ -f "$FILE" ]; then sudo systemctl enable zd-storage-metadata.service; fi
-FILE=/opt/setup_files/zd-storage-small.service
-if [ -f "$FILE" ]; then sudo systemctl enable zd-storage-small.service; fi
-FILE=/opt/setup_files/zd-storage.service
-if [ -f "$FILE" ]; then sudo systemctl enable zd-storage.service; fi
-FILE=/opt/setup_files/mergerfs.service
-if [ -f "$FILE" ]; then sudo systemctl enable mergerfs.service; fi
-FILE=/opt/setup_files/poller.service
-if [ -f "$FILE" ]; then sudo systemctl enable poller.service; fi
-sudo systemctl daemon-reload
-# end service files
-FILE=/opt/setup_files/rclone.conf
-if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/rclone.conf /home/seed/.config/rclone/; fi
-FILE=/opt/setup_files/config.yml
-if [ -f "$FILE" ]; then /bin/cp /opt/setup_files/config.yml /home/seed/.config/plexapi/; fi
+sudo systemctl enable zd*.service
+sudo systemctl enable mergerfs.service
+
+## Kernel Version Restore
+FILE=/opt/setup_files/kernel_version.txt
+if [ -f "$FILE" ]; then 
+  kv=$(cat /opt/setup_files/kernel_version.txt)
+  version=${kv%%-*}
+  wget -O /usr/local/bin/ https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
+  chmod +x /usr/local/bin/ubuntu-mainline-kernel.sh
+  sudo /usr/local/bin/ubuntu-mainline-kernel.sh -i "${version}"
+fi
+
 
 sudo touch /media/docker-volume.img
 sudo chattr +C /media/docker-volume.img
