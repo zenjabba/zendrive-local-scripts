@@ -110,6 +110,7 @@ sudo mount -a
 sudo cp /opt/scripts/zendrive-local-scripts/docker-compose*.yml /opt/docker
 sudo cp /opt/scripts/zendrive-local-scripts/.env /opt/docker
 sudo cp /opt/scripts/zendrive-local-scripts/dynamic.yml /opt/traefik
+ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/mergerfs.service /etc/systemd/system/mergerfs.service
 ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage.service /etc/systemd/system/zenstorage.service
 ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-small.service /etc/systemd/system/zenstorage-small.service
 ln -s /opt/scripts/zendrive-local-scripts/zendrive-local/scripts/zenstorage-metadata.service /etc/systemd/system/zenstorage-small.metadata
