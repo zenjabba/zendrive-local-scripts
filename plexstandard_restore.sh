@@ -114,8 +114,7 @@ sudo systemctl enable mergerfs.service
 ## Kernel Version Restore
 FILE=/opt/setup_files/kernel_version.txt
 if [ -f "$FILE" ]; then 
-  kv=$(cat /opt/setup_files/kernel_version.txt)
-  version=${kv%%-*}
+  version=$(cat /opt/setup_files/kernel_version.txt)
   wget -O /usr/local/bin/ https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
   chmod +x /usr/local/bin/ubuntu-mainline-kernel.sh
   sudo /usr/local/bin/ubuntu-mainline-kernel.sh -i "${version}"
