@@ -37,7 +37,7 @@ if [ "${1}" == "special" ]; then
 fi
 ## German ##
 if [ "${1}" == "german" ]; then
-/opt/scripts/update_libraries.sh tv_non-english/German/tv tv zd-tv_non-english tv_german.log "${2}" "${3}" > /opt/logs/tv_german.log 2>&1  && \
-/opt/scripts/update_libraries.sh movies_non-english/German/movies movie zd-movies_non-english movies_german.log "${2}" "${3}" > /opt/logs/movies_german.log 2>&1  && \
-/opt/scripts/update_libraries.sh movies_non-english/German/4k movie zd-movies_non-english movies_4k_german.log "${2}" "${3}" > /opt/logs/movies_4k_german.log 2>&1
+/opt/scripts/update_libraries.sh tv_non-english/German/tv tv zd-tv-non-english tv_german.log "${2}" "${3}" > /opt/logs/tv_german.log 2>&1  && \
+/opt/scripts/update_libraries.sh movies-non-english/German/movies movie zd-movies-non-english movies_german.log "${2}" "${3}" > /opt/logs/movies_german.log 2>&1  && \
+/opt/scripts/update_libraries.sh movies-non-english/German/4k movie zd-movies-non-english movies_4k_german.log "${2}" "${3}" > /opt/logs/movies_4k_german.log 2>&1
 fi
