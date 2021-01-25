@@ -29,7 +29,6 @@ if [ "${1}" == "movie" ]; then
 fi
 ## Special ##
 if [ "${1}" == "special" ]; then
-/opt/scripts/update_libraries.sh audiobooks/Audiobooks_English music zd-audiobooks audiobooks_english.log "${2}" "${3}" > /opt/logs/audiobooks_english.log 2>&1  && \
 /opt/scripts/update_libraries.sh courses/masterclass tv zd-courses courses_masterclass.log "${2}" "${3}" > /opt/logs/courses_masterclass.log 2>&1 && \
 /opt/scripts/update_libraries.sh courses/plex_courses tv zd-courses courses_plex_courses.log "${2}" "${3}" > /opt/logs/courses_plex_courses.log 2>&1 && \
 /opt/scripts/update_libraries.sh courses/exercise tv zd-courses courses_exercise.log "${2}" "${3}" > /opt/logs/courses_exercise.log 2>&1 && \
@@ -40,4 +39,9 @@ if [ "${1}" == "german" ]; then
 /opt/scripts/update_libraries.sh tv_non-english/German/tv tv zd-tv-non-english tv_german.log "${2}" "${3}" > /opt/logs/tv_german.log 2>&1  && \
 /opt/scripts/update_libraries.sh movies-non-english/German/movies movie zd-movies-non-english movies_german.log "${2}" "${3}" > /opt/logs/movies_german.log 2>&1  && \
 /opt/scripts/update_libraries.sh movies-non-english/German/4k movie zd-movies-non-english movies_4k_german.log "${2}" "${3}" > /opt/logs/movies_4k_german.log 2>&1
+fi
+## asian ##
+if [ "${1}" == "asian" ]; then
+/opt/scripts/update_libraries.sh tv_non-english/asian tv zd-tv-non-english tv_asian.log "${2}" "${3}" > /opt/logs/tv_asian.log 2>&1  && \
+/opt/scripts/update_libraries.sh movies-non-english/Bollywood movie zd-movies-non-english movies_bollywood.log "${2}" "${3}" > /opt/logs/movies_bollywood.log 2>&1
 fi
