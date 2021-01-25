@@ -29,6 +29,7 @@ if [ "${1}" == "movie" ]; then
 fi
 ## Special ##
 if [ "${1}" == "special" ]; then
+/opt/scripts/update_libraries.sh audiobooks/Audiobooks_English music zd-audiobooks audiobooks_english.log "${2}" "${3}" > /opt/logs/audiobooks_english.log 2>&1  && \
 /opt/scripts/update_libraries.sh courses/masterclass tv zd-courses courses_masterclass.log "${2}" "${3}" > /opt/logs/courses_masterclass.log 2>&1 && \
 /opt/scripts/update_libraries.sh courses/plex_courses tv zd-courses courses_plex_courses.log "${2}" "${3}" > /opt/logs/courses_plex_courses.log 2>&1 && \
 /opt/scripts/update_libraries.sh courses/exercise tv zd-courses courses_exercise.log "${2}" "${3}" > /opt/logs/courses_exercise.log 2>&1 && \
