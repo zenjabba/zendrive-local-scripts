@@ -2,7 +2,7 @@
 # AUTOSCAN ZENSTORAGE FOLDERS
 # $1 = section type 
 # $2 = days to look back
-# $3 = VFS/Refresh = 1 or leave enmpty if not needed
+# $3 = VFS/Refresh = 1 or leave empty if not needed
 #
 if [ "${1}" == "tv" ]; then
 ## TV ##
