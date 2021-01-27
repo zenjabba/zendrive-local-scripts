@@ -46,7 +46,6 @@ services:
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$ZYtV.rCA$$zAhMVxpJn9vnh0/xgL3yC1"
   plex:
-  plex:
     image: "linuxserver/plex:latest"
     container_name: plex
     labels:
