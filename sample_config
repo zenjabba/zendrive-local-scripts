@@ -1,2 +1,19 @@
 ## Lets use this as a sample config file.
 ## You need to copy this file to config.env for it to work for all the scripts
+# rClone Variables
+zdstorageport=5590
+zdstoragesmallport=5591 
+zdstoragemetadataport=5592
+rclonerecursive=true
+
+# Media Server
+basedir="/opt/docker"
+plexdir="/opt/docker/plexbase"
+plexdb="/opt/docker/plexbase/Library/Application Support/Plex Media Server/Plug-in Support/Databases"
+plexdocker="plexbase"
+jellyfindocker="jellyfin"
+
+# Script Variables
+date=$(date +%Y%m%d%H%M)
+date2=$(date +%Y-%m-%d)
+datePretty="$(date "+%D %H:%M %Z")"
