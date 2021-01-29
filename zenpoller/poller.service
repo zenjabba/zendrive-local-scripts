@@ -1,5 +1,5 @@
 [Unit]
-After=docker.service zd-union.service
+After=docker.service mergerfs.service
 
 [Service]
 ExecStart=/opt/scripts/zendrive/zenpoller/start_poller.sh
