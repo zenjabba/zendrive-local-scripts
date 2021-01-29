@@ -2,6 +2,18 @@
 #
 # Please only run this after you run preinstall and create your config file
 
+### script things
+scriptsetup() {
+    echo 'seed ALL=(ALL) NOPASSWD: ALL' >>/tmp/seed
+    sudo chown root:root /tmp/seed
+    sudo mv /tmp/seed /etc/sudoers.d/
+}
+
+### Configure Support Files
+uid=$(id -u seed)
+gid=$(id -g seed)
+
+### docker setup
 dockersetup() {
     # create pseudo file-system for docker
     sudo touch /media/docker-volume.img
@@ -19,6 +31,7 @@ dockersetup() {
     sudo chown -R seed:seed /opt
 }
 
+### service file setup
 servicefilesetup() {
     ## SYMLINK the Service Files ##
     ln -s /opt/scripts/zendrive/services/mergerfs.service /etc/systemd/system/mergerfs.service
@@ -34,7 +47,7 @@ servicefilesetup() {
     sudo systemctl enable zd-storage-metadata.service
 }
 
-# message
+### message
 message() {
     echo "Please Reboot your Box, and hold your butt while we hope all this worked"
     echo ""
@@ -48,6 +61,7 @@ message() {
 }
 
 main() {
+    scriptsetup
     dockersetup
     servicefilesetup
     message

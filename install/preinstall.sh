@@ -2,7 +2,7 @@
 #
 # This script will setup all the initial steps before you run the plexstandard.
 
-# shell setup
+### shell setup
 shellsetup() {
     echo 'shell'
     ##Shell Setup
@@ -14,14 +14,14 @@ shellsetup() {
     sudo /usr/local/bin/ubuntu-mainline-kernel.sh -i
 }
 
-## folder setup
+### folder setup
 foldersetup() {
     echo 'folders'
     sudo mkdir /mnt/{local,sharedrives,unionfs}
     sudo mkdir /opt/{plex,scripts,logs,plex_db_backups,traefik,docker}
     sudo mkdir /opt/scripts/installers
 }
-## repo setup
+### repo setup
 reposetup() {
     echo 'repo'
     git clone https://github.com/zenjabba/zendrive-local-scripts/ /opt/scripts/zendrive
@@ -32,7 +32,7 @@ reposetup() {
     sudo sed -i 's|http://nl.|http://|g' /etc/apt/sources.list
 }
 
-## user setup
+### user setup
 usersetup() {
     sudo useradd -m seed
     sudo usermod -aG sudo seed
@@ -41,8 +41,7 @@ usersetup() {
     #sudo chown seed:seed /opt/{plex,scripts,logs,plex_db_backups,traefik,docker}
 }
 
-
-## docker setup
+### docker setup
 dockersetup() {
     sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -55,7 +54,7 @@ dockersetup() {
     sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
     sudo apt-get upgrade -y 
 
-# systemd override for docker to wait for mergerfs
+### systemd override for docker to wait for mergerfs
 cat > /etc/systemd/system/docker.service.d/override.conf << "_EOF_"
 [Unit]
 After=
@@ -66,7 +65,7 @@ ExecStartPre=/bin/sleep 15
 _EOF_
 }
 
-# message
+### message
 message() {
     echo "This script is in process."
     echo ""
