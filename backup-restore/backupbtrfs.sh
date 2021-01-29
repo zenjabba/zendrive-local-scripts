@@ -16,7 +16,7 @@
 # read in content of backupbtrfs.conf
 #  YOU MUST EDIT THIS LINE AND PROVIDE THE PATH TO THE CONFIG FILE
 #  IF IT IS DIFFERENT THAN WHAT IS SHOWN
-. /opt/scripts/backupbtrfs.conf
+. /opt/scripts/zendrive/backup-restore/backupbtrfs.conf
 
 # process user access_key and foler path
 if [ -z ${var4a+x} ]; then
