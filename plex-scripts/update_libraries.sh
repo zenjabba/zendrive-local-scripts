@@ -1,5 +1,6 @@
 #!/bin/bash
-# updated for the new and improved scanfolder.sh
+# make sure you edit scanfolder.conf, it now has some
+# variables in it.  This makes it easier to do a git pull
 . /opt/scripts/zendrive/plex-scripts/scanfolder.conf
 source=$1
 trigger=$2
