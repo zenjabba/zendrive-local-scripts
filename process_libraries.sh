@@ -2,7 +2,7 @@
 # AUTOSCAN ZENSTORAGE FOLDERS
 # $1 = section type 
 # $2 = days to look back
-# $3 = VFS/Refresh = 1 or leave enmpty if not needed
+# $3 = VFS/Refresh = 1 or leave empty if not needed
 #
 if [ "${1}" == "tv" ]; then
 ## TV ##
@@ -34,4 +34,15 @@ if [ "${1}" == "special" ]; then
 /opt/scripts/update_libraries.sh courses/plex_courses tv zd-courses courses_plex_courses.log "${2}" "${3}" > /opt/logs/courses_plex_courses.log 2>&1 && \
 /opt/scripts/update_libraries.sh courses/exercise tv zd-courses courses_exercise.log "${2}" "${3}" > /opt/logs/courses_exercise.log 2>&1 && \
 /opt/scripts/update_libraries.sh sports/sportsdb tv zd-sports sports_sportsdb.log "${2}" "${3}" > /opt/logs/sports_sportsdb.log 2>&1
+fi
+## German ##
+if [ "${1}" == "german" ]; then
+/opt/scripts/update_libraries.sh tv_non-english/German/tv tv zd-tv-non-english tv_german.log "${2}" "${3}" > /opt/logs/tv_german.log 2>&1  && \
+/opt/scripts/update_libraries.sh movies-non-english/German/movies movie zd-movies-non-english movies_german.log "${2}" "${3}" > /opt/logs/movies_german.log 2>&1  && \
+/opt/scripts/update_libraries.sh movies-non-english/German/4k movie zd-movies-non-english movies_4k_german.log "${2}" "${3}" > /opt/logs/movies_4k_german.log 2>&1
+fi
+## asian ##
+if [ "${1}" == "asian" ]; then
+/opt/scripts/update_libraries.sh tv_non-english/asian tv zd-tv-non-english tv_asian.log "${2}" "${3}" > /opt/logs/tv_asian.log 2>&1  && \
+/opt/scripts/update_libraries.sh movies-non-english/Bollywood movie zd-movies-non-english movies_bollywood.log "${2}" "${3}" > /opt/logs/movies_bollywood.log 2>&1
 fi

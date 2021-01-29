@@ -98,6 +98,29 @@ secret_access_key = ${SECRET_ACCESS_KEY}
 endpoint = https://zendrives3.digitalmonks.org/
 _EOF_
 
+cat >> /home/seed/.config/rclone/rclone.conf << "_EOF_"
+[zenstorage-metadata]
+type = s3
+provider = Minio
+region = us-east-1
+chunk_size = 256M
+disable_http2 = true
+access_key_id = ${ACCESS_KEY_ID}
+secret_access_key = ${SECRET_ACCESS_KEY}
+endpoint = https://zendrives3-metadata.digitalmonks.org/
+_EOF_
+
+cat >> /home/seed/.config/rclone/rclone.conf << "_EOF_"
+[zenstorage-small]
+type = s3
+provider = Minio
+region = us-east-1
+chunk_size = 256M
+disable_http2 = true
+access_key_id = ${ACCESS_KEY_ID}
+secret_access_key = ${SECRET_ACCESS_KEY}
+endpoint = https://zendrives3-small.digitalmonks.org/
+_EOF_
 
 sudo touch /media/docker-volume.img
 sudo chattr +C /media/docker-volume.img
