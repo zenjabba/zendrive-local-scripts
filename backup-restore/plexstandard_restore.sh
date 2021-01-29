@@ -1,12 +1,7 @@
 #!/bin/bash
 #
-#   ENTER INFO HERE
-ACCESS_KEY_ID=""       # enter your ID here
-SECRET_ACCESS_KEY=""   # enter KEY here
-RESTORE_PATH=""        #  provide the path to your S3 backup
-#
-
-
+#   amke sure you enter your info into plexstandard_restore.conf
+. plexstandard_restore.conf
 
 ##Shell Setup
 sudo apt install -y apache2-utils bwm-ng cifs-utils git htop intel-gpu-tools iotop iperf3 ncdu nethogs nload psmisc python3-pip python-pip screen sqlite3 tmux tree unrar-free vnstat wget zsh
