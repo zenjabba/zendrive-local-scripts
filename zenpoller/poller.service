@@ -2,7 +2,7 @@
 After=docker.service zd-union.service
 
 [Service]
-ExecStart=/opt/scripts/poller/start_poller.sh
+ExecStart=/opt/scripts/zendrive/zenpoller/start_poller.sh
 ExecStop=/usr/bin/killall start_poller.sh
 Restart=on-abort
 RestartSec=5
