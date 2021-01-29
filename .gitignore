@@ -2,3 +2,4 @@
 /.env
 /backup-restore/backupbtrfs_files.txt
 /backup-restore/backupbtrfs.conf
+/plex-scripts/scanfolder.conf
