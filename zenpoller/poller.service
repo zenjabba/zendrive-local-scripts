@@ -1,0 +1,13 @@
+[Unit]
+After=docker.service zd-union.service
+
+[Service]
+ExecStart=/opt/scripts/poller/start_poller.sh
+ExecStop=/usr/bin/killall start_poller.sh
+Restart=on-abort
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+
+[Install]
+WantedBy=default.target

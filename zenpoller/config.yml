@@ -1,0 +1,65 @@
+mosquitto:
+  client_id: RANDOM-NAME-WHAT-EVER-YOU-WANT
+rclone:
+  host: 127.0.0.1
+  port: 5590
+  remote: zenstorage
+autoscan:
+  host: 127.0.0.1
+  port: 3030
+  triggers:
+    - path: zd-tv2/tv/20s/
+      trigger: sonarr20s
+    - path: zd-tv2/tv/10s/
+      trigger: sonarr10s
+    - path: zd-tv1/tv/00s/
+      trigger: sonarr00s
+    - path: zd-tv1/tv/90s/
+      trigger: sonarr90s
+    - path: zd-tv1/tv/80s/
+      trigger: sonarr80s
+    - path: zd-tv1/tv/70s/
+      trigger: sonarr70s
+    - path: zd-tv3/tv/4k/
+      trigger: sonarr4k
+    - path: zd-anime/tv/anime/
+      trigger: sonarranime
+    - path: zd-anime/tv/anime-dub/
+      trigger: sonarranime-dub
+    - path: zd-movies/movies/20s/
+      trigger: radarr20s
+    - path: zd-movies/movies/10s/
+      trigger: radarr10s
+    - path: zd-movies/movies/00s/
+      trigger: radarr00s
+    - path: zd-movies/movies/90s/
+      trigger: radarr90s
+    - path: zd-movies/movies/80s/
+      trigger: radarr80s
+    - path: zd-movies/movies/70s/
+      trigger: radarr70s
+    - path: zd-movies/movies/4k/
+      trigger: radarr4k
+    - path: zd-movies/movies/4k-dv/
+      trigger: radarr4kdv
+    - path: zd-audiobooks/audiobooks/
+      trigger: lidarr
+mount:
+  path: /mnt/unionfs
+  exclude_bucket_prefix: true 
+  exclusions:
+    - zd-audiobooks-non-english/
+    - zd-comics/
+    - zd-anime/movies/
+    - zd-movies/movies/3d/
+    - zd-movies/movies/remux/
+    - zd-test/
+    - zd-ebooks/
+    - zd-music0/
+    - zd-ebooks-non-english/
+    - zd-tv-non-english/
+  extension_exclusions:
+    - .nfo
+    - .jpg
+    - .png
+    - .txt
