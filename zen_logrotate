@@ -1,0 +1,11 @@
+/var/log/rclone-union.log
+/var/log/poller.log
+{
+	rotate 4
+	daily
+	missingok
+	copytruncate
+	notifempty
+	compress
+	sharedscripts
+}

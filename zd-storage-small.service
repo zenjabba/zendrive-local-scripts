@@ -18,7 +18,7 @@ ExecStart=/usr/bin/rclone mount \
   --s3-disable-http2 \
   --log-file=/var/log/rclone-union.log \
   --rc \
-  --rc-addr=localhost:5590 \
+  --rc-addr=localhost:5592 \
   --vfs-read-chunk-size=64M \
   --vfs-read-chunk-size-limit=off \
   --buffer-size=64M \
