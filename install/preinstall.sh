@@ -66,10 +66,23 @@ ExecStartPre=/bin/sleep 15
 _EOF_
 }
 
+# message
+message() {
+    echo "This script is in process."
+    echo ""
+    echo "seed password is $password"
+    echo ""
+    echo "  1. Create config.env file using the sample."
+    echo "  2. Run 'sudo bash /opt/scripts/zendrive/install/install.sh' to complete installation"
+    echo ""
+    echo "enjoy :)"
+}
+
 main() {
     shellsetup
     foldersetup
     usersetup
     reposetup
     dockersetup
+    message
 }
