@@ -9,7 +9,7 @@ ExecStartPre=-/usr/bin/sudo /bin/mkdir -p /mnt/sharedrives/zd-storage
 ExecStartPre=-/usr/bin/sudo /bin/chmod -R 775 /mnt/sharedrives/zd-storage
 ExecStartPre=-/usr/bin/sudo /bin/chown -R root:root /mnt/sharedrives/zd-storage
 ExecStartPre=/bin/sleep 10
-ExecStartPost=/opt/scripts/primeunion.sh
+ExecStartPost=/opt/scripts/zendrive/plex-scripts/primeunion.sh
 ExecStart=/usr/bin/rclone mount \
   --config=/root/.config/rclone/rclone.conf \
   --allow-other \
