@@ -70,7 +70,7 @@ message() {
     echo "This script is in process."
     echo ""
     echo "seed password is $password"
-    echo ""
+    echo " "
     echo "  1. Create config file using the sample."
     echo "       a. cp sample_config config.conf"
     echo "    How to find your keys:"
