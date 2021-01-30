@@ -115,7 +115,7 @@ message() {
     echo "Please Reboot your Box, and hold your butt while we hope all this worked"
     echo ""
     echo "When your box returns edit /opt/docker/docker-compose.yml & .env to your liking"
-    echo " Extras are in the /opt/docker/docker-compose-extras.yml"
+    echo "Extras are in the /opt/docker/docker-compose-extras.yml"
     echo "Once you are satified, cd /opt/docker && docker-compose up -d"
     echo "CloudBox can suck it, we have evolved."
     echo "This is the way :) " 
