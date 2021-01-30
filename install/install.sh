@@ -1,12 +1,54 @@
 #!/bin/bash
 #
 # Please only run this after you run preinstall and create your config file
+# get variables
+. /opt/scripts/zendrive/config
 
 ### script things
 scriptsetup() {
     echo 'seed ALL=(ALL) NOPASSWD: ALL' >>/tmp/seed
     sudo chown root:root /tmp/seed
     sudo mv /tmp/seed /etc/sudoers.d/
+}
+
+### S3 backup rclone conf
+backuprclone() {
+    ## CREATE S3 BACKUP RCLONE CONF
+    cat > /home/seed/.config/rclone/rclone.conf << "_EOF_"
+[zenstorage]
+type = s3
+provider = Minio
+region = us-east-1
+chunk_size = 256M
+disable_http2 = true
+access_key_id = ${ACCESS_KEY_ID}
+secret_access_key = ${SECRET_ACCESS_KEY}
+endpoint = https://zendrives3.digitalmonks.org/
+_EOF_
+
+    cat >> /home/seed/.config/rclone/rclone.conf << "_EOF_"
+[zenstorage-metadata]
+type = s3
+provider = Minio
+region = us-east-1
+chunk_size = 256M
+disable_http2 = true
+access_key_id = ${ACCESS_KEY_ID}
+secret_access_key = ${SECRET_ACCESS_KEY}
+endpoint = https://zendrives3-metadata.digitalmonks.org/
+_EOF_
+
+    cat >> /home/seed/.config/rclone/rclone.conf << "_EOF_"
+[zenstorage-small]
+type = s3
+provider = Minio
+region = us-east-1
+chunk_size = 256M
+disable_http2 = true
+access_key_id = ${ACCESS_KEY_ID}
+secret_access_key = ${SECRET_ACCESS_KEY}
+endpoint = https://zendrives3-small.digitalmonks.org/
+_EOF_
 }
 
 ### Configure Support Files
@@ -51,8 +93,6 @@ servicefilesetup() {
 message() {
     echo "Please Reboot your Box, and hold your butt while we hope all this worked"
     echo ""
-    echo "seed password is $password"
-    echo ""
     echo "When your box returns edit /opt/docker/docker-compose.yml & .env to your liking"
     echo " Extras are in the /opt/docker/docker-compose-extras.yml"
     echo "Once you are satified, cd /opt/docker && docker-compose up -d"
@@ -62,6 +102,7 @@ message() {
 
 main() {
     scriptsetup
+    backuprclone
     dockersetup
     servicefilesetup
     message

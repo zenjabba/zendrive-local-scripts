@@ -71,7 +71,7 @@ message() {
     echo ""
     echo "seed password is $password"
     echo ""
-    echo "  1. Create config.env file using the sample."
+    echo "  1. Create config file using the sample. 'cp sample_config config'"
     echo "  2. Run 'sudo bash /opt/scripts/zendrive/install/install.sh' to complete installation"
     echo ""
     echo "enjoy :)"
