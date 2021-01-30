@@ -83,6 +83,7 @@ message() {
     echo "        sudo bash /opt/scripts/zendrive/install/install.sh to complete installation"
     echo ""
     echo "enjoy :)"
+    touch /opt/scripts/zendrive/.preinstall
 }
 
 main() {
