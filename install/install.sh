@@ -100,8 +100,6 @@ servicefilesetup() {
     ln -s /opt/scripts/zendrive/services/zd-storage.service /etc/systemd/system/zd-storage.service
     ln -s /opt/scripts/zendrive/services/zd-storage-small.service /etc/systemd/system/zd-storage-small.service
     ln -s /opt/scripts/zendrive/services/zd-storage-metadata.service /etc/systemd/system/zd-storage-metadata.service
-    ln -s /opt/scripts/zendrive/zendrive-local/scripts/primeunion.sh /opt/scripts/primeunion.sh
-    chmod +x /opt/scripts/primeunion.sh
     cp /home/seed/.config/rclone/rclone.conf /root/.config/rclone/rclone.conf
     sudo systemctl daemon-reload
     sudo systemctl enable mergerfs.service
@@ -119,7 +117,6 @@ message() {
     echo "Once you are satified, cd /opt/docker && docker-compose up -d"
     echo "CloudBox can suck it, we have evolved."
     echo "This is the way :) " 
-    touch /opt/scripts/zendrive/.preinstall
 }
 
 main() {
