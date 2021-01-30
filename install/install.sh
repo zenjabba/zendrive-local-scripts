@@ -2,7 +2,26 @@
 #
 # Please only run this after you run preinstall and create your config file
 # get variables
-. /opt/scripts/zendrive/config
+. /opt/scripts/zendrive/config.conf
+
+### pre-check
+precheck() {
+    echo "Checking if Preinstall has been ran"
+    if [ ! -e "/opt/scripts/zendrive/.preinstall" ]; then
+        echo "Preinstall has not been run ..." 
+        exit 1
+    else
+        echo "Preinstall has been run ..."
+        echo "Check for config file ..."
+        if [ ! -e "/opt/scripts/zendrive/config.conf" ]; then
+            echo "Config file does not exist. please create ..." 
+            exit 1
+        else
+            echo "Config file exists ..."
+        fi
+    fi
+}
+
 
 ### script things
 scriptsetup() {
@@ -25,7 +44,6 @@ access_key_id = ${ACCESS_KEY_ID}
 secret_access_key = ${SECRET_ACCESS_KEY}
 endpoint = https://zendrives3.digitalmonks.org/
 _EOF_
-
     cat >> /home/seed/.config/rclone/rclone.conf << "_EOF_"
 [zenstorage-metadata]
 type = s3
@@ -37,7 +55,6 @@ access_key_id = ${ACCESS_KEY_ID}
 secret_access_key = ${SECRET_ACCESS_KEY}
 endpoint = https://zendrives3-metadata.digitalmonks.org/
 _EOF_
-
     cat >> /home/seed/.config/rclone/rclone.conf << "_EOF_"
 [zenstorage-small]
 type = s3
@@ -98,9 +115,11 @@ message() {
     echo "Once you are satified, cd /opt/docker && docker-compose up -d"
     echo ""
     echo "you are welcome :) "
+    touch /opt/scripts/zendrive/.preinstall
 }
 
 main() {
+    precheck
     scriptsetup
     backuprclone
     dockersetup

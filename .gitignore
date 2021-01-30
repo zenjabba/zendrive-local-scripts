@@ -4,3 +4,6 @@
 /backup-restore/backupbtrfs.conf
 /plex-scripts/scanfolder.conf
 /backup-restore/plexstandard_restore.conf
+/config.conf
+/.preinstall
+*.DS_store
