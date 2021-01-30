@@ -117,8 +117,8 @@ message() {
     echo "When your box returns edit /opt/docker/docker-compose.yml & .env to your liking"
     echo " Extras are in the /opt/docker/docker-compose-extras.yml"
     echo "Once you are satified, cd /opt/docker && docker-compose up -d"
-    echo ""
-    echo "you are welcome :) "
+    echo "CloudBox can suck it, we have evolved."
+    echo "This is the way :) " 
     touch /opt/scripts/zendrive/.preinstall
 }
 
