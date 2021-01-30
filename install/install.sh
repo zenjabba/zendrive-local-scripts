@@ -6,7 +6,7 @@
 
 ### pre-check
 precheck() {
-    echo "Checking if Preinstall has been ran"
+    echo "Checking if Preinstall has already been run"
     if [ ! -e "/opt/scripts/zendrive/.preinstall" ]; then
         echo "Preinstall has not been run ..." 
         exit 1
@@ -17,7 +17,7 @@ precheck() {
             echo "Config file does not exist. please create ..." 
             exit 1
         else
-            echo "Config file exists ..."
+            echo "Config file already exists, you seriously don't want to mess with it..."
         fi
     fi
 }
