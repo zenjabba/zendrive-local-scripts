@@ -4,7 +4,7 @@
 
 ### shell setup
 shellsetup() {
-    echo 'shell'
+    echo 'Shell Setup'
     ##Shell Setup
     sudo apt install -y apache2-utils bwm-ng cifs-utils git htop intel-gpu-tools iotop iperf3 ncdu nethogs nload psmisc python3-pip python-pip screen sqlite3 tmux tree unrar-free vnstat wget zsh
     sudo apt remove mlocate -y
@@ -16,14 +16,14 @@ shellsetup() {
 
 ### folder setup
 foldersetup() {
-    echo 'folders'
+    echo 'Folder Setup'
     sudo mkdir /mnt/{local,sharedrives,unionfs}
     sudo mkdir /opt/{plex,scripts,logs,plex_db_backups,traefik,docker}
     sudo mkdir /opt/scripts/installers
 }
 ### repo setup
 reposetup() {
-    echo 'repo'
+    echo 'Repo Setup'
     git clone https://github.com/zenjabba/zendrive-local-scripts/ /opt/scripts/zendrive
     git clone https://github.com/blacktwin/JBOPS /opt/scripts/JBOPS
     curl https://rclone.org/install.sh | sudo bash -s beta
@@ -34,6 +34,7 @@ reposetup() {
 
 ### user setup
 usersetup() {
+    echo 'User Setup'
     sudo useradd -m seed
     sudo usermod -aG sudo seed
     password=$(date +%s | sha256sum | base64 | head -c 12)
@@ -43,6 +44,7 @@ usersetup() {
 
 ### docker setup
 dockersetup() {
+    echo 'Docker Setup'
     sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" -y

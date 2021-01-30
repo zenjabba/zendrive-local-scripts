@@ -32,6 +32,7 @@ scriptsetup() {
 
 ### S3 backup rclone conf
 backuprclone() {
+    echo 'Backup Rclone Setup'
     ## CREATE S3 BACKUP RCLONE CONF
     cat > /home/seed/.config/rclone/rclone.conf << "_EOF_"
 [zenstorage]
@@ -74,6 +75,7 @@ gid=$(id -g seed)
 
 ### docker setup
 dockersetup() {
+    echo 'Docker Setup'
     # create pseudo file-system for docker
     sudo touch /media/docker-volume.img
     sudo chattr +C /media/docker-volume.img
@@ -92,6 +94,7 @@ dockersetup() {
 
 ### service file setup
 servicefilesetup() {
+    echo 'Service File Setup'
     ## SYMLINK the Service Files ##
     ln -s /opt/scripts/zendrive/services/mergerfs.service /etc/systemd/system/mergerfs.service
     ln -s /opt/scripts/zendrive/services/zd-storage.service /etc/systemd/system/zd-storage.service
@@ -99,6 +102,7 @@ servicefilesetup() {
     ln -s /opt/scripts/zendrive/services/zd-storage-metadata.service /etc/systemd/system/zd-storage-metadata.service
     ln -s /opt/scripts/zendrive/zendrive-local/scripts/primeunion.sh /opt/scripts/primeunion.sh
     chmod +x /opt/scripts/primeunion.sh
+    cp /home/seed/.config/rclone/rclone.conf /root/.config/rclone/rclone.conf
     sudo systemctl daemon-reload
     sudo systemctl enable mergerfs.service
     sudo systemctl enable zd-storage.service
