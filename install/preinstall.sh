@@ -2,9 +2,9 @@
 #
 # This script will setup all the initial steps before you run the plexstandard.
 
-# shell setup
+### shell setup
 shellsetup() {
-    echo 'shell'
+    echo 'Shell Setup'
     ##Shell Setup
     sudo apt install -y apache2-utils bwm-ng cifs-utils git htop intel-gpu-tools iotop iperf3 ncdu nethogs nload psmisc python3-pip python-pip screen sqlite3 tmux tree unrar-free vnstat wget zsh
     sudo apt remove mlocate -y
@@ -14,16 +14,16 @@ shellsetup() {
     sudo /usr/local/bin/ubuntu-mainline-kernel.sh -i
 }
 
-## folder setup
+### folder setup
 foldersetup() {
-    echo 'folders'
+    echo 'Folder Setup'
     sudo mkdir /mnt/{local,sharedrives,unionfs}
     sudo mkdir /opt/{plex,scripts,logs,plex_db_backups,traefik,docker}
     sudo mkdir /opt/scripts/installers
 }
-## repo setup
+### repo setup
 reposetup() {
-    echo 'repo'
+    echo 'Repo Setup'
     git clone https://github.com/zenjabba/zendrive-local-scripts/ /opt/scripts/zendrive
     git clone https://github.com/blacktwin/JBOPS /opt/scripts/JBOPS
     curl https://rclone.org/install.sh | sudo bash -s beta
@@ -32,8 +32,9 @@ reposetup() {
     sudo sed -i 's|http://nl.|http://|g' /etc/apt/sources.list
 }
 
-## user setup
+### user setup
 usersetup() {
+    echo 'User Setup'
     sudo useradd -m seed
     sudo usermod -aG sudo seed
     password=$(date +%s | sha256sum | base64 | head -c 12)
@@ -41,9 +42,9 @@ usersetup() {
     #sudo chown seed:seed /opt/{plex,scripts,logs,plex_db_backups,traefik,docker}
 }
 
-
-## docker setup
+### docker setup
 dockersetup() {
+    echo 'Docker Setup'
     sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" -y
@@ -55,7 +56,7 @@ dockersetup() {
     sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
     sudo apt-get upgrade -y 
 
-# systemd override for docker to wait for mergerfs
+### systemd override for docker to wait for mergerfs
 cat > /etc/systemd/system/docker.service.d/override.conf << "_EOF_"
 [Unit]
 After=
@@ -66,10 +67,29 @@ ExecStartPre=/bin/sleep 15
 _EOF_
 }
 
+### message
+message() {
+    echo "This script is in process."
+    echo ""
+    echo "seed password is $password"
+    echo " "
+    echo "  1. Create config file using the sample."
+    echo "       a. cp sample_config config.conf"
+    echo "    How to find your keys:"
+    echo "        Head over to https://dashboard.zenjabba.com/ and you will find your access and secret keys listed in your services"
+    echo "        They will look somthing like:"
+    echo "        AABBCCDDEEFFGGHH IIJJKKLLMMNNOOPPQQRRSSTT "
+    echo "  2. Run install script when complete"
+    echo "        sudo bash /opt/scripts/zendrive/install/install.sh to complete installation"
+    echo ""
+    echo "enjoy :)"
+}
+
 main() {
     shellsetup
     foldersetup
     usersetup
     reposetup
     dockersetup
+    message
 }
