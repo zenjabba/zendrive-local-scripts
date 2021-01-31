@@ -67,16 +67,16 @@ ExecStartPre=
 ExecStartPre=/bin/sleep 15
 _EOF_
 }
-### copy sample files 
+### copy sample files but not overwrite
 samplesetup() {
     cd /opt/scripts/zendrive
-    cp config.conf.sample config.conf
-    cp .env.sample .env
-    cp backup-restore/backupbtrfs_files.txt.sample backup-restore/backupbtrfs_files.txt
-    cp backup-restore/backupbtrfs.conf.sample backup-restore/backupbtrfs.conf
-    cp plex-scripts/scanfolder.conf.sample plex-scripts/scanfolder.conf
-    cp backup-restore/plexstandard_restore.conf.sample backup-restore/plexstandard_restore.conf
-    cp zenpoller/config.yml.sample zenpoller/config.yml
+    rsync -a -v --ignore-existing config.conf.sample config.conf
+    rsync -a -v --ignore-existing .env.sample .env
+    rsync -a -v --ignore-existing backup-restore/backupbtrfs_files.txt.sample backup-restore/backupbtrfs_files.txt
+    rsync -a -v --ignore-existing backup-restore/backupbtrfs.conf.sample backup-restore/backupbtrfs.conf
+    rsync -a -v --ignore-existing plex-scripts/scanfolder.conf.sample plex-scripts/scanfolder.conf
+    rsync -a -v --ignore-existing backup-restore/plexstandard_restore.conf.sample backup-restore/plexstandard_restore.conf
+    rsync -a -v --ignore-existing zenpoller/config.yml.sample zenpoller/config.yml
 }
 ### message
 message() {
