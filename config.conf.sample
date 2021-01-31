@@ -1,5 +1,10 @@
 ## Lets use this as a sample config file.
-## You need to copy this file to config.env for it to work for all the scripts
+## You need to copy this file to config.conf for it to work for all the scripts
+
+#S3 keys from dashboard
+access_key_id=
+secret_acess_key=
+
 # rClone Variables
 zdstorageport=5590
 zdstoragesmallport=5591 

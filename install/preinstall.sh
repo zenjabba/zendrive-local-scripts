@@ -57,7 +57,8 @@ dockersetup() {
     sudo apt-get upgrade -y 
 
 ### systemd override for docker to wait for mergerfs
-cat > /etc/systemd/system/docker.service.d/override.conf << "_EOF_"
+sudo mkdir /etc/systemd/system/docker.service.d/
+sudo cat > /etc/systemd/system/docker.service.d/override.conf << "_EOF_"
 [Unit]
 After=
 After=mergerfs.service
@@ -66,15 +67,25 @@ ExecStartPre=
 ExecStartPre=/bin/sleep 15
 _EOF_
 }
-
+### copy sample files 
+samplesetup() {
+    cd /opt/scripts/zendrive
+    cp config.conf.sample config.conf
+    cp .env.sample .env
+    cp backup-restore/backupbtrfs_files.txt.sample backup-restore/backupbtrfs_files.txt
+    cp backup-restore/backupbtrfs.conf.sample backup-restore/backupbtrfs.conf
+    cp plex-scripts/scanfolder.conf.sample plex-scripts/scanfolder.conf
+    cp backup-restore/plexstandard_restore.conf.sample backup-restore/plexstandard_restore.conf
+    cp zenpoller/config.yml.sample zenpoller/config.yml
+}
 ### message
 message() {
     echo "This script is in process."
     echo ""
     echo "seed password is $password"
     echo " "
-    echo "  1. Create config file using the sample."
-    echo "       a. cp sample_config config.conf"
+    echo "  1. config files are copied from sample files"
+    echo "       a. edits on config.conf & .env are mandatory"
     echo "    How to find your keys:"
     echo "        Head over to https://dashboard.zenjabba.com/ and you will find your access and secret keys listed in your services"
     echo "        They will look somthing like:"
@@ -91,6 +102,7 @@ main() {
     foldersetup
     usersetup
     reposetup
+    samplesetup
     dockersetup
     message
 }

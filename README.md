@@ -5,13 +5,15 @@
 ```bash
 sh -c "$(curl -fsSL https://raw.github.com/zenjabba/zendrive-local-scripts/master/install/preinstall.sh)"
 ```
-following files need to be copied and edited (if necessary) from `filename.sample`
+edit following files as nessarary 
 ```
-./zenpoller/config.yml
+./config.conf
 ./.env
+./backup-restore/plexstandard_restore.conf
+
+## optional 
 ./backup-restore/backupbtrfs_files.txt
 ./backup-restore/backupbtrfs.conf
 ./plex-scripts/scanfolder.conf
-./backup-restore/plexstandard_restore.conf
-./config.conf
+./zenpoller/config.yml
 ```
