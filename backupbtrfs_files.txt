@@ -1,0 +1,17 @@
+~/.bashrc
+/etc/security/limits.conf
+/etc/sysctl.conf
+/etc/systemd/system/zd-storage-metadata.service
+/etc/systemd/system/zd-storage-small.service
+/etc/systemd/system/zd-storage.service
+/etc/systemd/system/mergerfs.service
+/etc/systemd/system/poller.service
+~/.config/rclone/rclone.conf
+~/.config/plexapi/config.yml
+/etc/systemd/system/rc-local.service
+/etc/rc.local
+/etc/defaults/docker
+/etc/netplan/00-installer-config.yaml
+/etc/ssh/sshd.conf
+/etc/hosts
+/etc/hostname
