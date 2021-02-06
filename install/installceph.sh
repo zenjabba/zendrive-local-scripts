@@ -1,5 +1,6 @@
 #/bin/bash
 mkdir -p /etc/ceph
+mkdir -p /mnt/sharedrives/zd-storage-ceph
 echo "deb https://download.ceph.com/debian-octopus/ bionic main" >> /etc/apt/sources.list.d/ceph.list
 echo "[global]
         fsid = ae0bd11a-6639-11eb-9fa4-0050569051a7
