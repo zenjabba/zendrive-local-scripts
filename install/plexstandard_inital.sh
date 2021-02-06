@@ -57,7 +57,7 @@ sudo sed -i 's|http://nl.|http://|g' /etc/apt/sources.list
 sudo useradd -m seed
 sudo usermod -aG sudo seed
 password=$(date +%s | sha256sum | base64 | head -c 12)
-echo -e "$password\n$passwd" | passwd seed
+echo -e "$password\n$password" | passwd seed
 
 ##Docker Setup
 sudo apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common
