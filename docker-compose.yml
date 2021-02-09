@@ -102,6 +102,7 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "${APPDATA_ROOT}/tautulli:/config"
       - "${APPDATA_ROOT}/tautulli/transcode:/transcode"
+      - "${APPDATA_ROOT}/plex/Library/Application Support/Plex Media Server/Logs:/logs"
     environment:
       PUID: "${UID}"
       PGID: "${UID}"
