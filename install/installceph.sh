@@ -8,9 +8,7 @@ echo "[global]
 echo "[client.guest]
         key = AQBWHhxgeRcTBRAAeLsjFI134LB6ZnZCoWQNKw==" > /etc/ceph/ceph.client.guest.keyring
 echo ":/ /mnt/sharedrives/zd-storage-ceph ceph name=guest,noatime,_netdev 0 2" >> /etc/fstab
-wget https://download.ceph.com/keys/release.asc
-sudo apt-key add release.asc
-rm release.asc
+wget -q -O- 'https://download.ceph.com/keys/release.asc' | sudo apt-key add -
 sudo apt update
 sudo apt remove ceph-common -y
 sudo apt install ceph-common -y
