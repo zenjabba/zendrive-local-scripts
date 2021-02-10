@@ -1,7 +1,7 @@
 #/bin/bash
 mkdir -p /etc/ceph
 mkdir -p /mnt/sharedrives/zd-storage-ceph
-version=$(lsb_release -a)
+version=$(lsb_release --codename | cut -f2)
 echo "deb https://download.ceph.com/debian-octopus/ $version main" > /etc/apt/sources.list.d/ceph.list
 echo "[global]
         fsid = ae0bd11a-6639-11eb-9fa4-0050569051a7
