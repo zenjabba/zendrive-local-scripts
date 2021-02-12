@@ -49,14 +49,14 @@ get_files ()
   fi
   if [ ! -z "${DAYS}" ] && [ -z "${HOURS}" ]; then
     IFS=$'\n' 
-    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -type f -maxdepth "${depth}" -mtime +"${DAYS}" -printf "%p|%T+\n" | sort))
+    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -maxdepth "${depth}" -mtime +"${DAYS}" -type f -printf "%p|%T+\n" | sort))
     unset IFS
     MAXAGE=1
   fi
   if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
     HOURS=$((HOURS/24)) ;
     IFS=$'\n' 
-    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -type f -maxdepth "${depth}" -mtime +"${HOURS}" -printf "%p|%T+\n" | sort))
+    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER}  -maxdepth "${depth}" -mtime +"${HOURS}" -type f -printf "%p|%T+\n" | sort))
     unset IFS
     MAXAGE=1
   fi
@@ -171,7 +171,8 @@ do
      if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
         autoscan_check
         if [ "$check" -eq "0" ]; then
-           process_autoscan "${g}";
+           echo "${g}"
+           #process_autoscan "${g}";
            c=$[$c +1]
         fi
      fi
