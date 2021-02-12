@@ -37,20 +37,11 @@ sudo chmod +x /usr/local/bin/docker-compose
 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 sudo apt-get upgrade -y 
   
-## and a systemd override for docker to wait for mergerfs
-cat > /etc/systemd/system/docker.service.d/override.conf << "_EOF_"
-[Unit]
-After=mergerfs.service
-[Service]
-ExecStartPre=/bin/sleep 60
-_EOF_
 
 ## Script Setup
 curl https://rclone.org/install.sh | sudo bash -s beta
-wget https://github.com/trapexit/mergerfs/releases/download/2.30.0/mergerfs_2.30.0.ubuntu-bionic_amd64.deb -P /opt/scripts/installers
-sudo dpkg -i /opt/scripts/installers/mergerfs_2.30.0.ubuntu-bionic_amd64.deb
 git clone https://github.com/blacktwin/JBOPS /opt/scripts/JBOPS
-git clone https://github.com/zenjabba/scanfolder /opt/scripts/scanfolder
+git clone https://github.com/zenjabba/zendrive-local-scripts /opt/scripts/
 
 echo 'seed ALL=(ALL) NOPASSWD: ALL' >>/tmp/seed
 sudo chown root:root /tmp/seed
@@ -104,7 +95,7 @@ fi
 
 sudo systemctl daemon-reload
 sudo systemctl enable zd*.service
-sudo systemctl enable mergerfs.service
+
 
 ## Kernel Version Restore
 FILE=/opt/setup_files/kernel_version.txt

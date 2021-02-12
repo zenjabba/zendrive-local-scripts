@@ -16,7 +16,7 @@ shellsetup() {
     ## Kernel Things
     wget -O /usr/local/bin/ https://raw.githubusercontent.com/pimlie/ubuntu-mainline-kernel.sh/master/ubuntu-mainline-kernel.sh
     chmod +x /usr/local/bin/ubuntu-mainline-kernel.sh
-    sudo /usr/local/bin/ubuntu-mainline-kernel.sh -i 5.10.1
+    sudo /usr/local/bin/ubuntu-mainline-kernel.sh -i 5.11
     groupadd -g 32574 curators -r
 }
 
@@ -56,7 +56,7 @@ usersetup() {
     sudo useradd -m seed
     sudo usermod -aG sudo seed
     password=$(date +%s | sha256sum | base64 | head -c 12)
-    echo -e "$password\n$passwd" | passwd seed
+    echo -e "$password\n$password" | passwd seed
     #sudo chown seed:seed /opt/{plex,scripts,logs,plex_db_backups,traefik,docker}
 }
 
@@ -111,12 +111,23 @@ scriptsetup() {
 ### message
 message() {
     echo "Please Reboot your Box, and hold your butt while we hope all this worked"
-    echo ""
+    echo "
+    
+    
+    
+    
+    "
     echo "When your box returns edit /opt/docker/docker-compose.yml & .env to your liking"
     echo "Extras are in the /opt/docker/docker-compose-extras.yml"
     echo "Once you are satified, cd /opt/docker && docker-compose up -d"
     echo "CloudBox can suck it, we have evolved."
-    echo "This is the way :) " 
+    echo "This is the way :) "
+    echo "
+    "
+    echo "Oh BTW, your seed password is $password"
+    echo "
+    
+    "
     echo "@@@@@@@@@@@@@@((((((((((((((((((((((((((((((((((((((((((((((((((((@@@@@@@@@@@@@@
 @@@@@@@@@@@@@(((((((((((((((((((((((((((((((((((((((((((((((((((((((@@@@@@@@@@@@
 @@@@@@@@@@@((((((((((((((((((((((((((((((((((((((((((((((((((((((((((@@@@@@@@@@@
