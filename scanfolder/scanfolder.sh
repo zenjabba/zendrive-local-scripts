@@ -49,20 +49,20 @@ get_files ()
   fi
   if [ ! -z "${DAYS}" ] && [ -z "${HOURS}" ]; then
     IFS=$'\n' 
-    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -maxdepth "${depth}" -mtime +"${DAYS}" -type f -printf "%p|%T+\n" | sort))
+    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -maxdepth "${depth}" -mtime +"${DAYS}" -type f -printf "%p|%TY-%Tm-%Td %TH:%TM:%TS\n" | sort))
     unset IFS
     MAXAGE=1
   fi
   if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
     HOURS=$((HOURS/24)) ;
     IFS=$'\n' 
-    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER}  -maxdepth "${depth}" -mtime +"${HOURS}" -type f -printf "%p|%T+\n" | sort))
+    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER}  -maxdepth "${depth}" -mtime +"${HOURS}" -type f -printf "%p|%TY-%Tm-%Td %TH:%TM:%TS\n" | sort))
     unset IFS
     MAXAGE=1
   fi
   if [ -z ${MAXAGE+x} ]; then
-     IFS=$'\n' 
-    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -type f -maxdepth "${depth}" -printf "%p|%T+\n" | sort))
+    IFS=$'\n' 
+    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -maxdepth "${depth}"  -type f -printf "%p|%TY-%Tm-%Td %TH:%TM:%TS\n" | sort))
     unset IFS
   fi
   for i in "${filelist[@]}"
@@ -70,13 +70,13 @@ get_files ()
      FOO=$(basename "${i}")     
      FOO="$(echo -e "${FOO}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
      FOO=${#FOO}  
-     d1=${i##*|}
-     d1=$(date -d "${d1}" +%s)
      i2=${i%|*} 
      F2=1
      if [ "$FOO" -gt "$F2" ]; then
-        if [[ ! "${i2}" =~ ".nfo" ]] && [[ ! "${i2}" =~ ".srt" ]] && [[ ! "${i2}" =~ ".txt" ]] && [[ ! "${i2}" =~ ".jpg" ]] && [[ ! "${i2}" =~ ".iso" ]]; then
-           file_list+=("${CONTAINER_FOLDER}${SOURCE_FOLDER}${i2}|${d2}")
+        if [[ ! "${i2}" =~ ".nfo" ]] && [[ ! "${i2}" =~ ".srt" ]] && [[ ! "${i2}" =~ ".bin" ]] && [[ ! "${i2}" =~ ".txt" ]] && [[ ! "${i2}" =~ ".jpg" ]] && [[ ! "${i2}" =~ ".iso" ]]; then
+           d1=${i##*|}
+           d2=$(date -d"${d1}" +%s)
+           file_list+=("${i2}|${d2}")
         fi
      fi
   done
@@ -97,7 +97,7 @@ get_db_items ()
          unset IFS
          for f in "${fqry[@]}"; do
            d1=${f##*|}
-           d1=$(date -d "${d1}" +%s)
+           d2=$(date -d"${d1}" +%s)
            f2=${f%|*} 
            db_list+=("${f2}|${d2}")
          done
@@ -171,8 +171,7 @@ do
      if [ "${g}" != "${CONTAINER_FOLDER}${SOURCE_FOLDER}" ]; then
         autoscan_check
         if [ "$check" -eq "0" ]; then
-           echo "${g}"
-           #process_autoscan "${g}";
+           process_autoscan "${g}";
            c=$[$c +1]
         fi
      fi
