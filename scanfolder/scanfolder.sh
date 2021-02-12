@@ -49,13 +49,14 @@ get_files ()
   fi
   if [ ! -z "${DAYS}" ] && [ -z "${HOURS}" ]; then
     IFS=$'\n' 
-    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} R -type f -maxdepth "${depth}" -mtime +"${DAYS}" -printf "%p|%T+\n" | sort))
+    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -type f -maxdepth "${depth}" -mtime +"${DAYS}" -printf "%p|%T+\n" | sort))
     unset IFS
     MAXAGE=1
   fi
   if [ -z "${DAYS}" ] && [ ! -z "${HOURS}" ]; then
+    HOURS=$((HOURS/24)) ;
     IFS=$'\n' 
-    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -type f -maxdepth "${depth}" -mtime +"${DAYS}" -printf "%p|%T+\n" | sort))
+    filelist=($(find ${CONTAINER_FOLDER}${SOURCE_FOLDER} -type f -maxdepth "${depth}" -mtime +"${HOURS}" -printf "%p|%T+\n" | sort))
     unset IFS
     MAXAGE=1
   fi
