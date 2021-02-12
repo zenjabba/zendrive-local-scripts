@@ -3,7 +3,7 @@
 ## How To Install
 
 ```bash
-sh -c "$(curl -fsSL https://raw.github.com/zenjabba/zendrive-local-scripts/master/install/preinstall.sh)"
+sh -c "$(curl -fsSL https://raw.github.com/zenjabba/zendrive-local-scripts/master/install.sh)"
 ```
 edit following files as nessarary 
 ```
