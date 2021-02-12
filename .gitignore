@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 zenpoller/config.yml
 .env
 backup-restore/backupbtrfs_files.txt
@@ -7,3 +8,6 @@ backup-restore/plexstandard_restore.conf
 config.conf
 .preinstall
 *.DS_store
+=======
+.vscode/settings.json
+>>>>>>> Stashed changes
